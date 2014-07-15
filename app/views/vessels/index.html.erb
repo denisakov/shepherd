@@ -1,0 +1,31 @@
+<% title "Vessels" %>
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Vessel</th>
+        <th>Type</th>
+        <th>Year built</th>
+        <th>Flag</th>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @vessels.each do |vessel| %>
+        <tr>
+          <td><%= vessel.vsl_name %></td>
+          <td><%= vessel.vsl_type %></td>
+          <td><%= vessel.blt_year.to_formatted_s(:just_year) unless vessel.blt_year.nil? %></td>
+          <td><%= vessel.vsl_flag %></td>
+          <td><%= link_to 'Show', vessel %></td>
+          <td><%= link_to 'Edit', edit_vessel_path(vessel) %></td>
+          <td><%= link_to 'Destroy', vessel, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<br>
+
+<%= link_to 'New Vessel', new_vessel_path %>

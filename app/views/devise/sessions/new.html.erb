@@ -1,0 +1,29 @@
+<% title "Login" %>
+<h2>Log in</h2>
+
+<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+<%= devise_error_messages! %>
+  	<p class="field">
+  		<%= f.label :username %><br />
+  		<%= f.text_field :username, autofocus: true %>
+  	</p>
+
+  	<p class="field">
+	  	<%= f.label :password %><br />
+	    <%= f.password_field :password, autocomplete: "off" %>
+	</p>
+
+  <% if devise_mapping.rememberable? -%>
+    <p class="field">
+	    <%= f.check_box :remember_me %>
+	    <%= f.label :remember_me %>
+	</p>
+  <% end -%>
+
+  <div class="field">
+  	<%= f.submit "Login", :class => "btn btn-lg btn-primary" %>
+  </div>
+<% end %>
+<br />
+<%= render "devise/shared/links" %>
+<br />

@@ -1,0 +1,33 @@
+<%= form_for(@vessel) do |f| %>
+  <% if @vessel.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@vessel.errors.count, "error") %> prohibited this vessel from being saved:</h2>
+
+      <ul>
+      <% @vessel.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label "Name" %><br>
+    <%= f.text_field :vsl_name %>
+  </div>
+  <div class="field">
+    <%= f.label "Type" %><br>
+    <%= f.text_field :vsl_type %>
+  </div>
+  <div class="field">
+    <%= f.label "Year built" %><br>
+    <%= f.date_select :blt_year, :start_year => Date.current.year, :end_year => 1960 %><br>
+  </div>
+  <div class="field">
+    <%= f.label "Flag" %><br>
+    <%= f.text_field :vsl_flag %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

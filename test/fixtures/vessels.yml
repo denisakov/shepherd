@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  vsl_name: MyString
+  vsl_type: MyString
+  blt_year: 2014-07-02
+  vsl_flag: MyString
+
+two:
+  vsl_name: MyString
+  vsl_type: MyString
+  blt_year: 2014-07-02
+  vsl_flag: MyString

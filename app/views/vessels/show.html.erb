@@ -1,0 +1,25 @@
+<% title "Vessel" %>
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @vessel.vsl_name %>
+</p>
+
+<p>
+  <strong>Type:</strong>
+  <%= @vessel.vsl_type %>
+</p>
+
+<p>
+  <strong>Year built:</strong>
+  <%= @vessel.blt_year.to_formatted_s(:just_year) unless @vessel.blt_year.nil?  %>
+</p>
+
+<p>
+  <strong>Flag:</strong>
+  <%= @vessel.vsl_flag %>
+</p>
+
+<%= link_to 'Edit', edit_vessel_path(@vessel) %> |
+<%= link_to 'Back', vessels_path %>
