@@ -28,10 +28,17 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'spring',        group: :development
 gem 'hirb', '0.7.1', group: :development
 
-gem 'rails_12factor'
+gem 'rails_12factor', group: :production
 gem 'devise'
 gem 'chronic', '~>0.9.1'
 gem 'time_zone_ext'
 
 gem 'autoprefixer-rails'
 gem 'cancancan', '~> 1.8'
+gem 'rails4_client_side_validations', '~> 0.0.4'
+gem 'mechanize'
+gem 'nokogiri'
+gem 'roo'
+
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'

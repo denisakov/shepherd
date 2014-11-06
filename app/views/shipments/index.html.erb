@@ -1,0 +1,73 @@
+<% title "Shipments" %>
+<h3> Active shipments</h3>
+<% unless @active_shipments.empty? %>
+  <div class="table-responsive">
+    <table class="table table-hover table-condensed" >
+      <thead>
+        <tr>
+          <th class="small"><input type="checkbox"></th>
+          <th class="small"></th>
+          <th class="small">Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @active_shipments.each do |shipment| %>
+          <tr data-link="row" class="rowlink">
+            <td class="rowlink-skip">
+              <input type="checkbox">
+            </td>
+            <td class="col-xs-9"><%= link_to " ", shipment_path(shipment) %><strong><%= shipment.vessel.vsl_name %></strong> |
+              <%= shipment.shipment_statuses.last.status %>
+            </td>
+            <td>
+              <%= shipment.shipment_statuses.last.status unless shipment.shipment_statuses.empty? %>
+              (<%= shipment.shipment_statuses.last.created_at.to_formatted_s(:d_m) %>)
+            </td>
+            <td class="rowlink-skip"><%= link_to '<i class="glyphicon glyphicon-remove"></i>'.html_safe, shipment, class: "delete", method: :delete, remote: true %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+<p>
+  There are no active shipments at this time.
+</p>
+<% end %>
+<h3>Archive shipments</h3>
+<% unless @completed_shipments.empty? %>
+  <div class="table-responsive">
+    <table class="table table-hover table-condensed" >
+      <thead>
+        <tr>
+          <th class="small"><input type="checkbox"></th>
+          <th class="small"></th>
+          <th class="small">Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @completed_shipments.each do |shipment| %>
+          <tr data-link="row" class="rowlink">
+            <td class="rowlink-skip">
+              <input type="checkbox">
+            </td>
+            <td class="col-xs-9"><%= link_to " ", shipment_path(shipment) %><strong><%= Vessel.find_by_id(shipment.vessel_id).vsl_name %></strong> |
+              <%= shipment.shipment_statuses.last.status %>
+            </td>
+            <td><%= shipment.shipment_statuses.last.status unless shipment.shipment_statuses.empty? %></td>
+            <td class="rowlink-skip"><%= link_to '<i class="glyphicon glyphicon-remove"></i>'.html_safe, shipment, class: "delete", method: :delete, remote: true %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+<p>
+  There are no archive shipments at this time.
+</p>
+<% end %>
+<br>
+
+<%= link_to 'New Shipment', new_shipment_path %>

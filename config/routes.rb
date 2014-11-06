@@ -1,15 +1,49 @@
 Rails.application.routes.draw do
-  devise_for :users, path_names: {sign_in: "login", sign_out: "logout"}
+
+  resources :owners
+
+  resources :shipment_statuses
+
+  resources :shipments do
+    member do
+      post 'create_shipment_status'
+    end
+  end
+
+  devise_for :users, :path_names => {sign_in: "login", sign_out: "logout"} do
+    # devise/registrations
+    get 'signup' => 'devise/registrations#new', :as => :new_user_registration
+    post 'signup' => 'devise/registrations#create', :as => :user_registration
+    get 'users/cancel' => 'devise/registrations#cancel', :as => :cancel_user_registration
+    get 'users/edit' => 'devise/registrations#edit', :as => :edit_user_registration
+    put 'users' => 'devise/registrations#update'
+    delete 'users/cancel' => 'devise/registrations#destroy'  
+    # devise/sessions
+    get 'login' => 'devise/sessions#new', :as => :new_user_session
+    post 'login' => 'devise/sessions#create', :as => :user_session
+    delete 'users/logout' => 'devise/sessions#destroy', :as => :destroy_user_session
+  end
+
+  get 'dash', to: 'vessels#dash', :as => :dash
+
+  resources :positions
+  resources :vessels do
+    collection do
+      get :dash
+      get :scan
+      get :scan_gps
+      post :engage
+    end
+  end
+
   get 'about', to: 'static_pages#about'
-  get 'login', to: 'static_pages#login'
-
-  resources :vessels
-
+  
+  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root to: 'vessels#index'
+  root to: 'vessels#dash'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

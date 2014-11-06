@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Long:</strong>
+  <%= @position.long %>
+</p>
+
+<p>
+  <strong>Lat:</strong>
+  <%= @position.lat %>
+</p>
+
+<p>
+  <strong>Dest:</strong>
+  <%= @position.dest %>
+</p>
+
+<p>
+  <strong>Prev dest:</strong>
+  <%= @position.prev_dest %>
+</p>
+
+<p>
+  <strong>Last port:</strong>
+  <%= @position.last_port %>
+</p>
+
+<p>
+  <strong>Eta:</strong>
+  <%= @position.eta %>
+</p>
+
+<p>
+  <strong>Nav status:</strong>
+  <%= @position.nav_status %>
+</p>
+
+<p>
+  <strong>Last upt:</strong>
+  <%= @position.last_upt %>
+</p>
+
+<%= link_to 'Edit', edit_position_path(@position) %> |
+<%= link_to 'Back', positions_path %>

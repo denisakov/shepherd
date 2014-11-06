@@ -1,31 +1,114 @@
-<% title "Vessels" %>
+<% title "Vessels | <%= @free_vessels.count %>" %>
+<%= form_tag engage_vessels_path, :method => :post do %>
+  <% if user_signed_in? %>
+    <div class="hidden-print">
+      <span class="badge"><%= @free_vessels.count %></span>
+      <%= submit_tag 'Engage', :class => "btn btn-default btn-xs hidden-print" %></th>
+      <%= link_to 'New vessel', new_vessel_path, :class => "btn btn-xs btn-default hidden-print" %>&nbsp;&nbsp;&nbsp;&nbsp;
+      <%= link_to 'Scan', {:controller => :vessels, :action => :scan}, :class => "btn btn-default btn-xs hidden-print" %>
+      <%= link_to 'PDF', vessels_path(:format => :pdf), :class => "btn btn-xs btn-default hidden-print" %>
+    </div>
+    <br />
+  <% end %>
 <div class="table-responsive">
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>Vessel</th>
-        <th>Type</th>
-        <th>Year built</th>
-        <th>Flag</th>
-        <th colspan="3"></th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @vessels.each do |vessel| %>
+  <table class="table table-hover table-condensed" > 
+      <thead>
         <tr>
-          <td><%= vessel.vsl_name %></td>
-          <td><%= vessel.vsl_type %></td>
-          <td><%= vessel.blt_year.to_formatted_s(:just_year) unless vessel.blt_year.nil? %></td>
-          <td><%= vessel.vsl_flag %></td>
-          <td><%= link_to 'Show', vessel %></td>
-          <td><%= link_to 'Edit', edit_vessel_path(vessel) %></td>
-          <td><%= link_to 'Destroy', vessel, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <th class="small hidden-print"><input type="checkbox"></th>
+          <th class="small col-xs-2">Vessel</th>
+          <th class="small col-xs-1">Type</th>
+          <% if !user_signed_in? %>
+            <th class="small col-xs-2">IMO (MMSI)</th>
+          <% end %>
+          <% if user_signed_in? %>
+            <th class="small col-xs-1">Owner</th>
+          <% end %>
+          <th class="small col-xs-1">Last&nbsp;Upd</th>
+          <th class="small col-xs-1 hidden-print">Built</th>
+          <th class="small col-xs-2">Destination</th>
+          <th class="small col-xs-1">ETA</th>
+          <% if !user_signed_in? %>
+            <th class="small col-xs-1 hidden-print"></th>
+          <% end %>
         </tr>
-      <% end %>
-    </tbody>
+      </thead>
+      <tbody>
+        <% unless @free_vessels.nil? %>
+          <% @free_vessels.each do |vessel| %>
+            <tr data-link="row" class="rowlink">
+              <td class="rowlink-skip hidden-print"> 
+                <%= check_box_tag('vessel_ids[]', vessel.id) %>
+              </td>
+              <td class="text-left col-xs-2">
+                <% if vessel.created_at > Date.today-3 %>
+                  <span class="label label-info">new</span>
+                <% end %>
+                <%= link_to vessel.vsl_name, vessel_path(vessel) %>
+                <% if user_signed_in? %>
+                  (<%= vessel.imo %>)
+                <% end %>
+              </td>
+              <td class="col-xs-"><%= vessel.vsl_type %></td>
+              <% if !user_signed_in? %>
+                 <td class="rowlink-skip"><%= vessel.imo %> (<%= vessel.mmsi %>)</td>
+              <% end %>
+
+              <td class="col-xs-2">
+                <% if user_signed_in? %>
+                  <% unless vessel.owner.nil? %>
+                    <% if !vessel.owner.name.nil? %>
+                      <small><%= vessel.owner.name %><small>
+                    <% elsif !vessel.owner.notes.nil? %>
+                      <small><%= vessel.owner.notes %><br /></small>
+                    <% else %>
+                      <kbd><samp><%= "UNKNOWN" %></samp></kbd><br />
+                    <% end %>
+                  <% end %>
+                <% end %>
+              </td>
+              
+              <td class="col-xs-2"><%= vessel.positions.last.last_upt.to_formatted_s(:day_month) unless vessel.positions.nil? || vessel.positions.last.nil? || vessel.positions.last.last_upt.nil?%></td>
+              <td class="hidden-print col-xs-1"><%= vessel.blt_year.to_formatted_s(:just_year) unless vessel.blt_year.nil? %></td>
+              <td class="col-xs-3">
+                <% if !vessel.positions.last.nil? then %>
+                  <% if !vessel.positions.last.prev_dest.blank? then %>
+                    <% if vessel.positions.last.prev_dest.length > 20 then %>
+                      <%= vessel.positions.last.prev_dest[0..20] %> 
+                    <% else %>
+                      <%= vessel.positions.last.prev_dest %> 
+                    <% end %>
+                  <% else %>
+                    <kbd><samp><%= "UNKNOWN" %></samp></kbd>
+                  <% end %>
+                  <span class="glyphicon glyphicon-arrow-right"></span> 
+                  <% if !vessel.positions.last.dest.blank? then %>
+                    <% if vessel.positions.last.dest.length > 20 then %>
+                      <%= vessel.positions.last.dest[0..20] %> 
+                    <% else %>
+                      <%= vessel.positions.last.dest %> 
+                    <% end %>
+                  <% else %>
+                    <kbd><samp><%= "UNKNOWN" %></samp></kbd>
+                  <% end %>
+                <% end %>
+              </td>
+              <td class="col-xs-1">
+                <% if !vessel.positions.last.nil? then %>
+                  <% if !vessel.positions.last.eta.blank? then %>
+                    <%= vessel.positions.last.eta.to_formatted_s(:day_month_year) %>
+                  <% else %>
+                    <kbd><samp><%= "UNKNOWN" %></samp></kbd>
+                  <% end %>
+                <% end %>
+              </td>
+              <% if user_signed_in? %>
+                <td class="rowlink-skip hidden-print"><%= link_to '<i class="glyphicon glyphicon-remove"></i>'.html_safe, vessel, :class => 'delete', method: :delete, :remote => true %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    <% end %>
   </table>
 </div>
-<br>
-
-<%= link_to 'New Vessel', new_vessel_path %>

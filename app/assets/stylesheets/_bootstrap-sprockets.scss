@@ -10,7 +10,7 @@
 */
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
-padding-top: 60px;
+padding-top: 40px;
 }
 /*
 * Global add-ons
@@ -26,6 +26,42 @@ border-bottom: 1px solid #eee;
 .navbar-fixed-top {
 border: 0;
 }
+
+/* navbar */
+.navbar-primary .navbar { background:#A8CAFF; border-bottom:none; }
+.navbar-primary .navbar .nav > li > a {color: #000;}
+.navbar-primary .navbar .nav > li > a:hover {color: #fff; background-color: #7891BA;}
+.navbar-primary .navbar .nav .active > a,.navbar .nav .active > a:hover {color: #fff; background-color: #526380;}
+.navbar-primary .navbar .nav li > a .caret, .tnav .navbar .nav li > a:hover .caret {border-top-color: #fff;border-bottom-color: #fff;}
+/*.navbar-primary .navbar .nav > li.dropdown.open.active > a:hover {}*/
+/*.navbar-primary .navbar .nav > li.dropdown.open > a {color: #A8CAFF;background-color: #9f58b5;border-color: #333;}*/
+/*.navbar-primary .navbar .nav > li.dropdown.open.active > a:hover .caret, .tnav .navbar .nav > li.dropdown.open > a .caret {border-top-color: #fff;}*/
+.navbar-primary .navbar .navbar-brand {color:#fff;}
+/*.navbar-primary .navbar .nav.pull-right {margin-left: 10px; margin-right: 0;}*/
+.navbar-xs .navbar-primary .navbar { min-height:28px; height: 28px; }
+.navbar-xs .navbar-primary .navbar .navbar-brand{ padding: 0px 12px;font-size: 16px;line-height: 28px; }
+.navbar-xs .navbar-primary .navbar .navbar-nav > li > a {  padding-top: 0px; padding-bottom: 0px; line-height: 28px; }
+.navbar-sm .navbar-primary .navbar { min-height:40px; height: 40px; }
+.navbar-sm .navbar-primary .navbar .navbar-brand{ padding: 0px 12px;font-size: 16px;line-height: 40px; }
+.navbar-sm .navbar-primary .navbar .navbar-nav > li > a {  padding-top: 0px; padding-bottom: 0px; line-height: 40px; }
+
+.navbar-toggle {
+    background-color: #ddd;
+    border: 1px solid;
+    margin-bottom: 0px;
+}
+.navbar-toggle:hover {
+    background-color: #aaa;
+}
+.navbar-collapse {
+    border-top:none;
+    background-color:#A8CAFF;
+    border-bottom:1px #333;
+}
+.icon-bar {
+    background-color:#000 !important;
+  }
+
 /*
 * Sidebar
 */
@@ -36,7 +72,7 @@ display: none;
 @media (min-width: 768px) {
 .sidebar {
 position: fixed;
-top: 51px;
+top: 60px;
 bottom: 0;
 left: 0;
 z-index: 1000;
@@ -130,3 +166,33 @@ border-radius: 50%;
     color: #468847;
     text-align: left;
  }
+.field_with_errors { display: inline; }
+ 
+.vbottom {
+    display: inline-block;
+    vertical-align: sub;
+    float: none;
+}
+.vmiddle {
+    display: inline-block;
+    vertical-align: sub;
+    float: none;
+}
+hr {
+    margin-bottom: 6px;
+    margin-top: 2px;
+}
+.map_sign {
+    background-color: #ccc;
+    font-size:1.2em;
+    display: inline-block;
+    border: 1px solid #eee;
+    margin-top: 5px;
+    margin-left: 5px;
+    padding:4px;
+}
+
+div .last-map
+{
+    height:230px;
+}

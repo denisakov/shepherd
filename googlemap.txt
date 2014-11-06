@@ -1,0 +1,17 @@
+<% unless vessel.positions.last.eta.blank? %>
+                          <% icon = URI.encode("icon:http://chart.apis.google.com/chart?chst=d_bubble_icon_texts_big_withshadow&chld=ship|edge_bc|000000|ffffff|#{vessel.vsl_name} (#{vessel.imo})|from +|blah blah blah|blah", "+, |, %") %>
+                        <% else %>
+                          <% icon = URI.encode("icon:https://chart.apis.google.com/chart?chst=d_bubble_texts_big_withshadow&chld=edge_bc|000000|ffffff|#{vessel.vsl_name}+(#{vessel.imo})|#{vessel.positions.last.prev_dest}+->+#{vessel.positions.last.dest}@ETA+unknown|", "&, |, +")%>
+                        <% end %>
+
+str = vessel.vsl_name + " (" + vessel.imo + ")"
+
+str = str.gsub(" ", "+")
+
+icon = URI.encode("icon:http://chart.apis.google.com/chart?chst=d_bubble_icon_texts_big_withshadow&chld=ship|edge_bc|000000|ffffff|#{str}|from +|blah blah blah|blah", "&, %, |, +")
+
+icon = URI.encode(icon, "&, %, |, +")
+icon = icon + "|"
+icon = URI.encode(icon, "|")
+boom = "http://maps.googleapis.com/maps/api/staticmap?zoom=7&size=640x300&scale:2&maptype=roadmap&markers=#{icon}#{vessel.positions.last.lat},#{vessel.positions.last.long}"
+=> "http://maps.googleapis.com/maps/api/staticmap?zoom=7&size=640x300&scale:2&maptype=roadmap&markers=icon:http://chart.apis.google.com/chart?chst=d_bubble_icon_texts_big_withshadow%26chld=ship%257Cedge_bc%257C000000%257Cffffff%257CAlikber+Pashaev+(9103817)%257Cfrom%2520+%257Cblah%2520blah%2520blah%257Cblah%7C46.4099,48.0169"

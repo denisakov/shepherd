@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  long: 1.5
+  lat: 1.5
+  dest: MyString
+  prev_dest: MyString
+  last_port: MyString
+  eta: MyString
+  nav_status: MyString
+  last_upt: MyString
+
+two:
+  long: 1.5
+  lat: 1.5
+  dest: MyString
+  prev_dest: MyString
+  last_port: MyString
+  eta: MyString
+  nav_status: MyString
+  last_upt: MyString

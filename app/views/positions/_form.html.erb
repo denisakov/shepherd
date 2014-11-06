@@ -1,0 +1,49 @@
+<%= form_for(@position) do |f| %>
+  <% if @position.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@position.errors.count, "error") %> prohibited this position from being saved:</h2>
+
+      <ul>
+      <% @position.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :long %><br>
+    <%= f.text_field :long %>
+  </div>
+  <div class="field">
+    <%= f.label :lat %><br>
+    <%= f.text_field :lat %>
+  </div>
+  <div class="field">
+    <%= f.label :dest %><br>
+    <%= f.text_field :dest %>
+  </div>
+  <div class="field">
+    <%= f.label :prev_dest %><br>
+    <%= f.text_field :prev_dest %>
+  </div>
+  <div class="field">
+    <%= f.label :last_port %><br>
+    <%= f.text_field :last_port %>
+  </div>
+  <div class="field">
+    <%= f.label :eta %><br>
+    <%= f.text_field :eta %>
+  </div>
+  <div class="field">
+    <%= f.label :nav_status %><br>
+    <%= f.text_field :nav_status %>
+  </div>
+  <div class="field">
+    <%= f.label :last_upt %><br>
+    <%= f.text_field :last_upt %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

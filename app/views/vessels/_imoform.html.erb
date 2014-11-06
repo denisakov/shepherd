@@ -1,0 +1,20 @@
+<%= form_tag(scan_vessels_path, :class => "form-horizontal", :role => "form", :validate => true, :method => :get) do %>
+
+  <div class="form-group row">
+    <div class="col-xs-2">
+      <label for="inputName" class="control-label vmiddle ">IMO</label>
+    </div>
+    <div class="field col-xs-4 row">
+      <%= text_field_tag :imo, params[:imo], :class => "form-control", :id => "inputImo", :placeholder => "Please type the IMO number of the vessel" %>    
+    </div>
+  </div>
+
+  <div class="actions form-group row">
+    <div class="field col-xs-2">
+      <%= submit_tag 'Integrate', :class => "btn btn-default btn-primary" %>
+    </div>
+    <div class="field col-xs-10">
+      <%= link_to 'Back', vessels_path, :class => "vbottom pull-left" %>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,10 @@
+<h1>
+  <strong><%= @shipment_status.title %></strong>
+</h1>
+<h3>
+  <strong>Status:</strong>
+  <%= @shipment_status.status %>
+</h3>
+
+<%= link_to 'Edit', edit_shipment_status_path(@shipment_status) %> |
+<%= link_to 'Back', shipments_path %>

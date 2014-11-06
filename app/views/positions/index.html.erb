@@ -1,0 +1,39 @@
+<h1>Listing positions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Long</th>
+      <th>Lat</th>
+      <th>Dest</th>
+      <th>Prev dest</th>
+      <th>Last port</th>
+      <th>Eta</th>
+      <th>Nav status</th>
+      <th>Last upt</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @positions.each do |position| %>
+      <tr>
+        <td><%= position.long %></td>
+        <td><%= position.lat %></td>
+        <td><%= position.dest %></td>
+        <td><%= position.prev_dest %></td>
+        <td><%= position.last_port %></td>
+        <td><%= position.eta %></td>
+        <td><%= position.nav_status %></td>
+        <td><%= position.last_upt %></td>
+        <td><%= link_to 'Show', position %></td>
+        <td><%= link_to 'Edit', edit_position_path(position) %></td>
+        <td><%= link_to 'Destroy', position, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Position', new_position_path %>

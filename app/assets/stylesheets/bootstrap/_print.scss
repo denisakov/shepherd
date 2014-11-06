@@ -5,13 +5,42 @@
 
 @media print {
 
+  .last-map {
+    -webkit-box-sizing: content-box;
+       -moz-box-sizing: content-box;
+            box-sizing: content-box;
+    height:200px;
+  }
+
+  body {
+  padding-top: 0px;
+  }
+  .main {
+  padding: 0px;
+  }
+
   * {
+    font-size: 1em;
     text-shadow: none !important;
     color: #000 !important; // Black prints faster: h5bp.com/s
-    background: transparent !important;
+    background: visible;
     box-shadow: none !important;
   }
 
+  .container {
+    margin-left: 5px;
+    margin-right: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    width:100%;
+    -webkit-box-sizing: content-box;
+       -moz-box-sizing: content-box;
+            box-sizing: content-box;
+  }
+
+.last-map{
+  height:270px !important;
+}
   a,
   a:visited {
     text-decoration: underline;
@@ -42,8 +71,10 @@
   }
 
   tr,
-  img {
+  img,
+  .panel-group {
     page-break-inside: avoid;
+    background: visible  !important;
   }
 
   img {
