@@ -2,7 +2,7 @@ require 'rake'
 Shepherd::Application.load_tasks
 
 class VesselsController < ApplicationController
-  before_action :authenticate_user!, :except => [:index, :show, :dash]
+  before_action :authenticate_user!, :except => [:index, :show, :dash, :non_russian]
   before_action :set_vessel, only: [:show, :edit, :update, :destroy]
 
 
@@ -19,6 +19,23 @@ class VesselsController < ApplicationController
                    :page_size => "A4"
       end
       format.html #{ render :index }
+    end
+
+  end
+
+  def non_russian
+    #@all_vessels = Vessel.preload(:positions).order('vessels.vsl_name ASC').references(:positions)
+    #@russian_vessels = Vessel.russian_vessels.preload(:positions).order('vessels.vsl_name ASC')
+    @non_russian_vessels = Vessel.free_vessels.where('vsl_flag != ?', "Russia").preload(:positions).order('vessels.vsl_type ASC')
+
+    respond_to do |format|
+      format.pdf do
+            render :pdf => "Example PDF file",
+                   :template => 'vessels/non_russian.pdf.erb',
+                   :print_media_type => true,
+                   :page_size => "A4"
+      end
+      format.html { render :non_russian }
     end
 
   end

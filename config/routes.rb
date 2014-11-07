@@ -25,11 +25,13 @@ Rails.application.routes.draw do
   end
 
   get 'dash', to: 'vessels#dash', :as => :dash
+  get 'non_russian', to: 'vessels#non_russian', :as => :non_russian
 
   resources :positions
   resources :vessels do
     collection do
       get :dash
+      get :non_russian
       get :scan
       get :scan_gps
       post :engage

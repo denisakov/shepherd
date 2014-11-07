@@ -1,6 +1,6 @@
 namespace :crawl do
   desc "collects and updates data from external sources"
-  task :owner, [:imo] => :environment do |t, args|
+  task :owner, [:vessel_imos] => :environment do |t, args|
     require 'rubygems'
     require 'open-uri'
     require 'roo'
@@ -253,174 +253,184 @@ namespace :crawl do
 		end    	
     else
        	puts "The IMO number was provided. So all we need is a single vessel."
-		imo = args.imo
-
-		v = Vessel.find_by_imo(imo)
-
-		puts "We will be looking for the OWNER of vessel #{v.vsl_name}."
-
-		url = "http://fleetphoto.ru/ajax2.php?action=index-qsearch&num=&exact=0&imo=" + imo + "&mmsi="
+		#imo = args.imo
+		args.vessel_imos.each do |imo|
 			
-		puts url
-		
-		page = open(url,'User-Agent' => 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.121 Safari/535.2').read
-		puts "Loaded first page..."
-		sleep rand(3..9)
-		if page.length > 2
-			puts "Page has content"
-			fleet_ref = page[9..13].gsub("\"","").gsub(",","")
-			puts "The reference number is #{fleet_ref}"
-			url = "http://fleetphoto.ru/ship/" + fleet_ref + "/"
-			puts "Opening #{url}"
-			begin
-				agent.get(url)
-				puts "Page loaded. Searching for the owner's name"
+			v = Vessel.find_by_imo(imo)
 
-				found_owner_full = agent.page.search('.s1 td:contains("Владелец")')[0] || agent.page.search('.s11 td:contains("Владелец:")')[0]
+			if v then
+				if v.updated_at > Time.now-1800
+					puts "We will be looking for the OWNER of vessel #{v.vsl_name}."
 
-				if !found_owner_full.nil?
-					found_owner = found_owner_full.parent.children[1].text[0..-3]
-				else
-					found_owner = nil
-				end
+					url = "http://fleetphoto.ru/ajax2.php?action=index-qsearch&num=&exact=0&imo=" + imo + "&mmsi="
+						
+					puts url
+					
+					page = open(url,'User-Agent' => 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.121 Safari/535.2').read
+					puts "Loaded first page..."
+					sleep rand(3..9)
+					if page.length > 2
+						puts "Page has content"
+						fleet_ref = page[9..13].gsub("\"","").gsub(",","")
+						puts "The reference number is #{fleet_ref}"
+						url = "http://fleetphoto.ru/ship/" + fleet_ref + "/"
+						puts "Opening #{url}"
+						begin
+							agent.get(url)
+							puts "Page loaded. Searching for the owner's name"
 
-				if found_owner =~ /Прочие|Проч/
-					found_owner = nil
-				end
-				if !found_owner.nil?
-					owner_name_rus = found_owner.strip
-					owner_name = translit(found_owner.strip)
-					puts "----------- The vessel belongs to +#{owner_name}+, #{owner_name_rus} -------------"
-				else
-					owner_name_rus = nil
-					owner_name = nil
-					puts "The vessel's owner is unknown."
-				end
+							found_owner_full = agent.page.search('.s1 td:contains("Владелец")')[0] || agent.page.search('.s11 td:contains("Владелец:")')[0]
 
-				found_operator_full = agent.page.search('.s1 td:contains("Оператор:")')[0] || agent.page.search('.s11 td:contains("Оператор:")')[0]
+							if !found_owner_full.nil?
+								found_owner = found_owner_full.parent.children[1].text[0..-3]
+							else
+								found_owner = nil
+							end
 
-				if !found_operator_full.nil?
-					found_operator = found_operator_full.parent.children[1].text
+							if found_owner =~ /Прочие|Проч/
+								found_owner = nil
+							end
+							if !found_owner.nil?
+								owner_name_rus = found_owner.strip
+								owner_name = translit(found_owner.strip)
+								puts "----------- The vessel belongs to +#{owner_name}+, #{owner_name_rus} -------------"
+							else
+								owner_name_rus = nil
+								owner_name = nil
+								puts "The vessel's owner is unknown."
+							end
 
-					if found_operator =~ /Прочие/
-						found_operator = nil
-					end
-					if !found_operator.nil?
-						operator_name_rus = found_operator.strip
-						operator_name = translit(found_operator.strip)
-						puts "----------- Operator is #{operator_name} (#{operator_name_rus}) -------------"
+							found_operator_full = agent.page.search('.s1 td:contains("Оператор:")')[0] || agent.page.search('.s11 td:contains("Оператор:")')[0]
+
+							if !found_operator_full.nil?
+								found_operator = found_operator_full.parent.children[1].text
+
+								if found_operator =~ /Прочие/
+									found_operator = nil
+								end
+								if !found_operator.nil?
+									operator_name_rus = found_operator.strip
+									operator_name = translit(found_operator.strip)
+									puts "----------- Operator is #{operator_name} (#{operator_name_rus}) -------------"
+								else
+									operator_name_rus = nil
+									operator_name = nil
+									puts "___________ The vessel has NO OPERATOR ______________"
+								end
+							else
+								operator_name_rus = nil
+								operator_name = nil
+								puts "___________ The vessel has NO OPERATOR ______________"
+							end
+
+							found_notes_full = agent.page.search('.s1 td:contains("Примечание:")')[0] || agent.page.search('.s11 td:contains("Примечание:")')[0]
+
+							if !found_notes_full.nil?
+								found_notes = ((found_notes_full.text + " " + found_notes_full.parent.children[1].text).prepend("#{operator_name}" + "(" + "#{operator_name_rus}" + ")" + "; ")).strip
+								puts "----------- Additional info #{found_notes} -------------"
+							elsif found_notes_full.nil? && !operator_name.nil?
+								found_notes = (operator_name + "(" + operator_name_rus + ")" + ";").strip
+								puts "----------- Additional info #{found_notes} -------------"
+							else
+								found_notes = nil
+								puts "___________ No extra notes found. ___________"
+							end
+
+							found_date_full = agent.page.search('.s1 td:contains("Построено:")')[0] || agent.page.search('.s11 td:contains("Построено:")')[0]
+
+							if !found_date_full.nil?
+								found_date = found_date_full.parent.children[1].text
+								puts "----------- Built on #{found_date} -------------"
+								puts " "
+							else
+								found_owner = nil
+								puts "----------- There is no DATE indicated -------------"
+								puts " "
+							end
+
+							if !found_date.nil? && v.blt_year.nil?
+								if found_date.length == 7
+									built = Date.parse(found_date.prepend("01."))
+									puts ">>>>>>>>>>> DATE <<<<<<<<<<<<<<"
+									puts "The vessel was build #{built}"
+								elsif found_date.length == 4
+									built = Date.parse(found_date.prepend("01.01."))
+									puts ">>>>>>>>>>> DATE <<<<<<<<<<<<<<"
+									puts "The vessel was build #{built}"
+								elsif found_date.length == 10
+									built = Date.parse(found_date)
+									puts ">>>>>>>>>>> DATE <<<<<<<<<<<<<<"
+									puts "The vessel was build #{built}"
+								else
+									built = nil
+									puts " "
+									puts ">>>>>>>>>>> DATE IS UNKNOWN <<<<<<<<<<<<<<"
+									puts " "
+								end
+								v.update_attributes(:blt_year => built)
+								v.save!
+							end
+						rescue Mechanize::ResponseCodeError => ex
+							puts ex.response_code
+							if ex.response_code == '404'
+								puts "The vessel has different MMSI or IMO number on different sites"
+							else
+								#raise ex
+								puts ex.response_code
+							end
+						end
 					else
-						operator_name_rus = nil
-						operator_name = nil
-						puts "___________ The vessel has NO OPERATOR ______________"
+						puts "<<<<<<<<<<<<<<<<<<< ALARM >>>>>>>>>>>>>>>>>>>"
+						puts "Fleetphoto page has NO CONTENT. Trying the alternative sources."
+
 					end
-				else
-					operator_name_rus = nil
-					operator_name = nil
-					puts "___________ The vessel has NO OPERATOR ______________"
-				end
-
-				found_notes_full = agent.page.search('.s1 td:contains("Примечание:")')[0] || agent.page.search('.s11 td:contains("Примечание:")')[0]
-
-				if !found_notes_full.nil?
-					found_notes = ((found_notes_full.text + " " + found_notes_full.parent.children[1].text).prepend("#{operator_name}" + "(" + "#{operator_name_rus}" + ")" + "; ")).strip
-					puts "----------- Additional info #{found_notes} -------------"
-				elsif found_notes_full.nil? && !operator_name.nil?
-					found_notes = (operator_name + "(" + operator_name_rus + ")" + ";").strip
-					puts "----------- Additional info #{found_notes} -------------"
-				else
-					found_notes = nil
-					puts "___________ No extra notes found. ___________"
-				end
-
-				found_date_full = agent.page.search('.s1 td:contains("Построено:")')[0] || agent.page.search('.s11 td:contains("Построено:")')[0]
-
-				if !found_date_full.nil?
-					found_date = found_date_full.parent.children[1].text
-					puts "----------- Built on #{found_date} -------------"
-					puts " "
-				else
-					found_owner = nil
-					puts "----------- There is no DATE indicated -------------"
-					puts " "
-				end
-
-				if !found_date.nil? && v.blt_year.nil?
-					if found_date.length == 7
-						built = Date.parse(found_date.prepend("01."))
-						puts ">>>>>>>>>>> DATE <<<<<<<<<<<<<<"
-						puts "The vessel was build #{built}"
-					elsif found_date.length == 4
-						built = Date.parse(found_date.prepend("01.01."))
-						puts ">>>>>>>>>>> DATE <<<<<<<<<<<<<<"
-						puts "The vessel was build #{built}"
-					elsif found_date.length == 10
-						built = Date.parse(found_date)
-						puts ">>>>>>>>>>> DATE <<<<<<<<<<<<<<"
-						puts "The vessel was build #{built}"
+					
+					if v.owner.nil? && ( !owner_name.nil? || !found_notes.nil? )
+						o = Owner.find_by_name(owner_name)
+						o ||= Owner.create(:name => owner_name, :rus_name => owner_name_rus, :notes => found_notes)
+						o.save!
+						v.update_attributes(:owner_id => o.id)
+						v.save!
+						puts "Created new owner company #{owner_name} (#{owner_name}) for vessel #{v.id} #{v.vsl_name}"
+					elsif v.owner.nil? && !found_notes.nil?
+						o = Owner.find_by_name(owner_name)
+						o ||= Owner.create(:name => owner_name, :rus_name => owner_name_rus, :notes => found_notes)
+						o.save!
+						v.update_attributes(:owner_id => o.id)
+						v.save!
+						puts "Created new owner company #{owner_name} (#{owner_name_rus}) with additional notes #{found_notes}"
+					elsif v.owner.nil? && owner_name.nil? && found_notes.nil?
+						puts "The owner or operator is UKNOWN. There is no additional info either."
+					elsif v.owner.name == owner_name
+						puts "The vessel's owner is still the same"
+						puts "++++++++++++ All done ++++++++++++++"
+					elsif v.owner.name != owner_name
+						o = Owner.find_by_name(owner_name)
+						o ||= Owner.create(:name => owner_name, :rus_name => owner_name_rus, :notes => found_notes)
+						v.update_attributes(:owner_id => o.id)
+						v.save!
+						puts "Updated owner company #{owner_name} (#{owner_name}) with additional notes #{found_notes}"
+						puts ''
+						puts "++++++++++++++ COMPLETED ++++++++++++++"
+					elsif v.owner.name =~ /Prochie|Proch/
+						v.update_attributes(:owner_id => nil)
+						v.save!
+						puts "The vessel's owner is not known, but please check the ADITIONAL INFO"
+						puts "++++++++++++ NEXT VESSEL ++++++++++++++"
+						puts " "
 					else
-						built = nil
-						puts " "
-						puts ">>>>>>>>>>> DATE IS UNKNOWN <<<<<<<<<<<<<<"
-						puts " "
+						puts '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+						puts "+#{v.owner.name}+"
+						puts "Nothing to update for +#{owner_name}+ (#{owner_name_rus}) and the vessel #{v.id}. #{v.vsl_name}"
+						puts '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+						next
 					end
-					v.update_attributes(:blt_year => built)
-					v.save!
-				end
-			rescue Mechanize::ResponseCodeError => ex
-				puts ex.response_code
-				if ex.response_code == '404'
-					puts "The vessel has different MMSI or IMO number on different sites"
 				else
-					#raise ex
-					puts ex.response_code
+					puts "The vessel's owner info was updated less then 3 days ago"
 				end
+			else
+				puts "The vessel with such IMO does not exist"
 			end
-		else
-			puts "<<<<<<<<<<<<<<<<<<< ALARM >>>>>>>>>>>>>>>>>>>"
-			puts "Fleetphoto page has NO CONTENT. Trying the alternative sources."
-
-		end
-		
-		if v.owner.nil? && ( !owner_name.nil? || !found_notes.nil? )
-			o = Owner.find_by_name(owner_name)
-			o ||= Owner.create(:name => owner_name, :rus_name => owner_name_rus, :notes => found_notes)
-			o.save!
-			v.update_attributes(:owner_id => o.id)
-			v.save!
-			puts "Created new owner company #{owner_name} (#{owner_name}) for vessel #{v.id} #{v.vsl_name}"
-		elsif v.owner.nil? && !found_notes.nil?
-			o = Owner.find_by_name(owner_name)
-			o ||= Owner.create(:name => owner_name, :rus_name => owner_name_rus, :notes => found_notes)
-			o.save!
-			v.update_attributes(:owner_id => o.id)
-			v.save!
-			puts "Created new owner company #{owner_name} (#{owner_name_rus}) with additional notes #{found_notes}"
-		elsif v.owner.nil? && owner_name.nil? && found_notes.nil?
-			puts "The owner or operator is UKNOWN. There is no additional info either."
-		elsif v.owner.name == owner_name
-			puts "The vessel's owner is still the same"
-			puts "++++++++++++ All done ++++++++++++++"
-		elsif v.owner.name != owner_name
-			o = Owner.find_by_name(owner_name)
-			o ||= Owner.create(:name => owner_name, :rus_name => owner_name_rus, :notes => found_notes)
-			v.update_attributes(:owner_id => o.id)
-			v.save!
-			puts "Updated owner company #{owner_name} (#{owner_name}) with additional notes #{found_notes}"
-			puts ''
-			puts "++++++++++++++ COMPLETED ++++++++++++++"
-		elsif v.owner.name =~ /Prochie|Proch/
-			v.update_attributes(:owner_id => nil)
-			v.save!
-			puts "The vessel's owner is not known, but please check the ADITIONAL INFO"
-			puts "++++++++++++ NEXT VESSEL ++++++++++++++"
-			puts " "
-		else
-			puts '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-			puts "+#{v.owner.name}+"
-			puts "Nothing to update for +#{owner_name}+ (#{owner_name_rus}) and the vessel #{v.id}. #{v.vsl_name}"
-			puts '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-			next
 		end
 	end
 end

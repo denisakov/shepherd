@@ -43,7 +43,7 @@ namespace :crawl do
 				next
 			end
 			url = "http://www.marinetraffic.com/en/ais/details/ships/" + mmsi
-			sleep rand(0..9)
+			sleep rand(1..9)
 			puts url
 
 			begin
@@ -316,7 +316,7 @@ namespace :crawl do
 					puts "There was no info at the website"
 					next
 				end
-
+				sleep rand(2..6)
 			rescue Mechanize::ResponseCodeError => ex
 				puts ex.response_code
 			end

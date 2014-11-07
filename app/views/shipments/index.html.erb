@@ -1,5 +1,5 @@
 <% title "Shipments" %>
-<h3> Active shipments</h3>
+<h3> Active shipments <span class="badge"><%= @active_shipments.count %></span></h3>
 <% unless @active_shipments.empty? %>
   <div class="table-responsive">
     <table class="table table-hover table-condensed" >
@@ -35,7 +35,7 @@
   There are no active shipments at this time.
 </p>
 <% end %>
-<h3>Archive shipments</h3>
+<h3>Archive <span class="badge"><%= @completed_shipments.count %></span></h3>
 <% unless @completed_shipments.empty? %>
   <div class="table-responsive">
     <table class="table table-hover table-condensed" >

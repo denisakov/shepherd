@@ -1,0 +1,136 @@
+<% title "Vessels | #{@non_russian_vessels.count}" %>
+<%= form_tag engage_vessels_path, :method => :post do %>
+  <% if user_signed_in? %>
+    <div class="hidden-print">
+      <span class="badge"><%= @non_russian_vessels.count %></span>
+      <%= submit_tag 'Engage', :class => "btn btn-default btn-xs hidden-print" %></th>
+      <%= link_to 'New vessel', new_vessel_path, :class => "btn btn-xs btn-default hidden-print" %>&nbsp;&nbsp;&nbsp;&nbsp;
+      <%= link_to 'Scan', {:controller => :vessels, :action => :scan}, :class => "btn btn-default btn-xs hidden-print" %>
+      <%= link_to 'PDF', vessels_path(:format => :pdf), :class => "btn btn-xs btn-default hidden-print" %>
+    </div>
+    <br />
+  <% end %>
+<div class="table-responsive">
+  <table class="table table-hover table-condensed" > 
+      <thead>
+        <tr>
+          <th class="small hidden-print"><input type="checkbox"></th>
+          <th class="small col-xs-3">Vessel</th>
+          <th class="small col-xs-1">Type</th>
+          <th class="small col-xs-1">Flag</th>
+          <th class="small col-xs-1">Status</th>
+          <% if !user_signed_in? %>
+            <th class="small col-xs-2">IMO (MMSI)</th>
+          <% end %>
+          <% if user_signed_in? %>
+            <th class="small col-xs-4">Owner</th>
+          <% end %>
+          <th class="small col-xs-1">Last&nbsp;Upd</th>
+          <th class="small col-xs-1 hidden-print">Built</th>
+          <% if !user_signed_in? %>
+            <th class="small hidden-print"></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% unless @non_russian_vessels.nil? %>
+          <% @non_russian_vessels.each do |vessel| %>
+            <tr data-link="row" class="rowlink">
+              <td class="rowlink-skip hidden-print"> 
+                <%= check_box_tag('vessel_ids[]', vessel.id) %>
+              </td>
+              <td class="text-left col-xs-3">
+                <%= link_to vessel.vsl_name, vessel_path(vessel) %>
+                <% if user_signed_in? %>
+                  (<%= vessel.imo %>)
+                <% end %>
+              </td>
+
+              <td class="col-xs-1"><%= vessel.vsl_type %></td>
+
+              <td class="col-xs-1"><%= vessel.vsl_flag %></td>
+
+              <!-- STATUS INFO -->
+              <td class="col-xs-1">
+                <% if vessel.positions %>
+                    <% if vessel.positions.last %>
+                        <% if vessel.positions.last.nav_status.nil? %>
+                          <kbd><samp><%= "UNKNOWN" %></samp></kbd>
+                        <% elsif vessel.positions.last.nav_status =~ /Way|Underway/ %>
+                          <span class="label label-success"><%= vessel.positions.last.nav_status %></span>
+                        <% elsif vessel.positions.last.nav_status =~ /Lost/%>
+                          <span class="label label-danger"><%= vessel.positions.last.nav_status %></span>
+                        <% elsif vessel.positions.last.nav_status =~ /Unknown/ %>
+                          <kbd><samp><%= "UNKNOWN" %></samp></kbd>
+                        <% else %>
+                          <span class="label label-warning"><%= vessel.positions.last.nav_status %></span>
+                        <% end %>
+                      
+                    <% end %>
+                <% else %>
+                  <kbd><samp><%= "UNKNOWN" %></samp></kbd>
+                <% end %>
+              </td>
+              <!-- end of STATUS INFO -->
+
+              <% if !user_signed_in? %>
+                 <td class="rowlink-skip"><%= vessel.imo %> (<%= vessel.mmsi %>)</td>
+              <% end %>
+              <!-- OWNER INFO -->
+              <td class="col-xs-4">
+                <% if user_signed_in? %>
+                  <% if !vessel.owner.nil? %>
+                    <% if !vessel.owner.name.nil? %>
+                      <small><%= vessel.owner.name %><small>
+                    <% elsif !vessel.owner.notes.nil? %>
+                      <small><%= vessel.owner.notes %><br /></small>
+                    <% else %>
+                      <kbd><samp><%= "UNKNOWN" %></samp></kbd>
+                    <% end %>
+                  <% else %>
+                    <kbd><samp><%= "UNKNOWN" %></samp></kbd>
+                  <% end %>
+                <% end %>
+              </td>
+              <!-- end of OWNER INFO -->
+
+              <!-- LAST UPDATE INFO -->
+              <td class="col-xs-1">
+                <% if !vessel.positions.nil? %>
+                  <% if !vessel.positions.last.nil? %>
+                    <% if !vessel.positions.last.last_upt.nil? %>
+                      <%= vessel.positions.last.last_upt.to_formatted_s(:day_month) %>
+                    <% else %>
+                      <kbd><samp><%= "UNKNOWN" %></samp></kbd>
+                    <% end %>
+                  <% else %>
+                    <kbd><samp><%= "UNKNOWN" %></samp></kbd>
+                  <% end %>
+                <% else %>
+                  <kbd><samp><%= "UNKNOWN" %></samp></kbd>
+                <% end %>
+              </td>
+              <!-- end of LAST UPDATE INFO -->
+
+              <!-- Year BUILT -->
+              <td class="hidden-print col-xs-1">
+                <% if !vessel.blt_year.nil? %>
+                  <%= vessel.blt_year.to_formatted_s(:just_year) %> 
+                <% else %>
+                  <kbd><samp><%= "UNKNOWN" %></samp></kbd>
+                <% end %>
+              </td>
+              <!-- end of Year BUILT -->
+
+              <% if user_signed_in? %>
+                <td class="rowlink-skip hidden-print col-xs-1"><%= link_to '<i class="glyphicon glyphicon-remove"></i>'.html_safe, vessel, :class => 'delete', method: :delete, :remote => true %>
+                </td>
+              <% end %>
+
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    <% end %>
+  </table>
+</div>

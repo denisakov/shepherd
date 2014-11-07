@@ -114,7 +114,7 @@ namespace :crawl do
 				puts "Loaded first page..."
 				if page.length > 2
 					puts "Page has content"
-					fleet_ref = page[9..13].gsub("\"","")
+					fleet_ref = page[9..13].gsub("\"","").gsub(",","")
 					puts fleet_ref
 					url = "http://fleetphoto.ru/ship/" + fleet_ref + "/"
 					puts "Opening #{url}"
@@ -128,12 +128,14 @@ namespace :crawl do
 					if !(page =~ /[\d]{9}/).nil?
 						mmsi = page[(page =~ /[\d]{9}/)..(page =~ /[\d]{9}/)+8]
 
-						puts "MMSI #{mmsi}"
+						#puts "MMSI #{mmsi}"
 
 						url = "http://www.marinetraffic.com/ru/ais/details/ships/" + imo
+						puts url
 
 						begin
 							agent.get(url)
+
 							str = agent.page.at("title").children[0].text
 							@vsl_name = str[0..str.index(" - ")-1]
 							@flag = str[(str =~ /Registered in/)+13..(str =~ /- AIS Marine/)-1].strip
@@ -148,13 +150,16 @@ namespace :crawl do
 							v = Vessel.create(:vsl_name => @vsl_name, :imo => imo, :mmsi => mmsi, :vsl_flag => @flag, :vsl_type => @vsl_type)
 							v.save!
 							puts "Created vessel #{v.id} #{@vsl_name}"
+							sleep rand(2..6)
 						rescue Mechanize::ResponseCodeError => ex
 							puts ex.response_code
 							if ex.response_code == '404'
 								puts "The vessel has different MMSI or IMO number on different sites"
+								next
 							else
 								#raise ex
 								puts ex.response_code
+								next
 							end
 						end
 					else

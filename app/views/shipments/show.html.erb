@@ -3,18 +3,20 @@
 <H1>
   <strong><%= @shipment.vessel.vsl_name %></strong>
 </H1>
-<% @shipment.shipment_statuses.order('created_at DESC').each_with_index do |s, index| %>
-	 	<% if index == 0 %>
-	 	
-	 	<H3>Latest:
-		  	<%= s.status %> <small>(<%= s.created_at.to_formatted_s(:d_m_y) %>)</small>
-	  	</H3>
-		<% else %>
-		<H4>
-			<%= s.status %> <small>(<%= s.created_at.to_formatted_s(:d_m_y) %>)</small>
-		</H4>
-		<% end %>	
-<% end %>
+<div class="row">
+	<% @shipment.shipment_statuses.order('created_at DESC').each_with_index do |s, index| %>
+		 	<% if index == 0 %>
+		 	
+		 	<H3>Latest:
+			  	<%= s.status %> <small>(<%= s.created_at.to_formatted_s(:d_m_y) %>)</small>
+		  	</H3>
+			<% else %>
+			<H4>
+				<%= s.status %> <small>(<%= s.created_at.to_formatted_s(:d_m_y) %>)</small>
+			</H4>
+			<% end %>	
+	<% end %>
+</div>
 <% if user_signed_in? %>
 	<button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#add_new_status" aria-expanded="false" aria-controls="add_new_status">
 	  New status +

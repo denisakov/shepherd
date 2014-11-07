@@ -1,0 +1,68 @@
+<%= form_for(@vessel, :validate => true, :class => "form-horizontal", :role => "form") do |f| %>
+<!--  <% if @vessel.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@vessel.errors.count, "error") %> prohibited this vessel from being saved:</h2>
+
+      <ul>
+      <% @vessel.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>-->
+
+  <div class="form-group row">
+    <div class="col-sm-1">
+      <label for="inputName" class="control-label vmiddle">Name</label>
+    </div>
+    <div class="field col-sm-5 row">
+      <%= f.text_field :vsl_name, :class => "form-control", :id => "inputName", :placeholder => "Please type the name of the vessel" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-1">
+      <label for="inputIMO" class="control-label vmiddle">IMO</label>
+    </div>
+    <div class="field col-sm-5 row">
+      <%= f.text_field :imo, :class => "form-control", :id => "inputIMO", :placeholder => "0000000"  %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-1">
+      <label for="inputMMSI" class="control-label vmiddle">MMSI</label>
+    </div>
+    <div class="field col-sm-5 row">
+      <%= f.text_field :mmsi, :class => "form-control", :id => "inputMMSI", :placeholder => "000000000"  %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-1">
+      <label for="inputType" class="control-label vmiddle">Type</label>
+    </div>
+    <div class="field col-sm-5 row">
+      <%= f.text_field :vsl_type, :class => "form-control", :id => "inputType", :placeholder => "Omskiy, Sibirskiy, etc."  %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-1">
+      <label for="inputDate" class="control-label vmiddle">Built</label>
+    </div>
+    <div class="field col-sm-5 row">
+      <%= f.date_select :blt_year, :start_year => Date.current.year, :end_year => 1960, :class => "form-control col-sm-5", :id => "inputDate" %>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-1">
+      <label for="inputFlag" class="control-label vmiddle">Flag</label>
+    </div>
+    <div class="field col-sm-5 row">
+      <%= f.text_field :vsl_flag, :class => "form-control", :id => "inputFlag", :placeholder => "Russia, Sierra Leone, etc."  %>
+    </div>
+  </div>
+  <div class="actions form-group row">
+    <div class="field col-sm-6">
+      <%= f.submit "Create", :class => "btn btn-lg btn-primary" %>&nbsp;&nbsp;&nbsp;
+      <%= link_to 'Back', :back, :class => "vbottom" %>
+    </div>
+  </div>
+<% end %>
