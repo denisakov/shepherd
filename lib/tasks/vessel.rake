@@ -102,10 +102,18 @@ namespace :crawl do
     	puts " "
     	puts "IMO numbers were provided. We will find the vessel now."
     	puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+
+    	puts "#{args.vessel_imos[0]}"
     	puts " "
 
-    	args.vessel_imos.each do |imo|
+    	all_vessels = args.vessel_imos[0]
+
+    	all_vessels.each do |imo|
+
 			if !vimo.include? imo
+
+				puts "#{imo}"
+
 				url = "http://fleetphoto.ru/ajax2.php?action=index-qsearch&num=&exact=0&imo=" + imo + "&mmsi="
 
 				puts url

@@ -6,9 +6,7 @@ namespace :crawl do
         puts args.inspect
         #puts args[:vessel_imos].split(" ").map(&:to_i)
         vessel_imos = Array.new
-        args[:vessel_imos].split(" ").each do |i|
-            vessel_imos << i
-        end
+        
         #puts "#{vessel_imos}"
         
         if args.count == 0 
@@ -24,11 +22,13 @@ namespace :crawl do
             #    puts "there must 7 digits only"
             #    next
             # else
-                # vessel_imos = Array.new
-                # vessel_imos << args.vessel_imos
-                # puts vessel_imos
+                args[:vessel_imos].split(", ").each do |i|
+                    vessel_imos << i
+                end
                 
-                #Rake::Task['crawl:vessel'].invoke(vessel_imos)
+                puts "#{vessel_imos}"
+
+                Rake::Task['crawl:vessel'].invoke(vessel_imos)
                 Rake::Task['crawl:owner'].invoke(vessel_imos)
                 Rake::Task['crawl:location'].invoke(vessel_imos)
                 Rake::Task['crawl:gps'].invoke(vessel_imos)

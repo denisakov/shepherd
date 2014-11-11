@@ -125,10 +125,10 @@ class VesselsController < ApplicationController
 
   def scan
       Rake::Task['crawl:new'].reenable
-      Rake::Task['crawl:new'].invoke(params[:imo])
+      Rake::Task['crawl:new'].invoke(params[:vessel_imos])
 
       respond_to do |format|
-        format.html { redirect_to vessels_path, success: 'Vessel has been integrated!' }
+        format.html { redirect_to dash_path, success: 'Vessel information has been updated!' }
         format.json { head :no_content }
         format.js
       end

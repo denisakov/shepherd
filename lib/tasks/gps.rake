@@ -132,8 +132,17 @@ namespace :crawl do
 	else
 		puts "Checking coordinates for active vessels"
 		
-		args.vessel_imos.each do |imo|
-			puts imo
+		all_vessels = args.vessel_imos[0]
+		
+
+		if args.vessel_imos[0].class == String
+			puts "#{args.vessel_imos[0].class}"
+			all_vessels = Array.new
+			all_vessels << args.vessel_imos[0]
+		end
+
+    	all_vessels.each do |imo|
+			puts imo.to_s
 			pos = Array.new
 			url = "http://www.marinetraffic.com/en/ais/details/ships/" + imo
 			puts url

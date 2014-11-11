@@ -20,7 +20,7 @@
           <th class="small col-xs-1">Flag</th>
           <th class="small col-xs-1">Status</th>
           <% if !user_signed_in? %>
-            <th class="small col-xs-2">IMO (MMSI)</th>
+            <th class="small col-xs-2">IMO</th>
           <% end %>
           <% if user_signed_in? %>
             <th class="small col-xs-4">Owner</th>
@@ -74,7 +74,7 @@
               <!-- end of STATUS INFO -->
 
               <% if !user_signed_in? %>
-                 <td class="rowlink-skip"><%= vessel.imo %> (<%= vessel.mmsi %>)</td>
+                 <td class="rowlink-skip"><%= vessel.imo %></td>
               <% end %>
               <!-- OWNER INFO -->
               <td class="col-xs-4">

@@ -2,8 +2,8 @@
   <p class="hidden-print">
     <a title="" data-toggle="tooltip" href="#" data-original-title="Total number of currently active vessels"
     data-placement="right"><span class="badge"><%= @active_vessels.count %></span></a>
-    <%= form_tag scan_gps_vessels_path, :method => :get do %>
-    <%= submit_tag 'Update GPS', :class => "btn btn-default btn-xs hidden-print" %> 
+    <%= form_tag scan_vessels_path, :method => :get do %>
+    <%= submit_tag 'Update', :class => "btn btn-default btn-xs hidden-print" %> 
     <%= link_to 'PDF', dash_path(:format => :pdf), :class => "btn btn-xs btn-default hidden-print" %>
   </p>
     <div class="table-responsive">
@@ -114,6 +114,7 @@
                           <hr>
                         </div>
                       </div>
+
                       <div class="row">
                         <div class="col-xs-6">
                           <p>
@@ -134,6 +135,7 @@
                           </p>
                         </div>
                       </div>
+
                       <div class="row">
                         <div class="col-xs-6">
                           <p>
@@ -148,6 +150,7 @@
                           </p>
                         </div>
                       </div>
+
                       <div class="row">
                         <div class="col-xs-6">
                           <% unless vessel.owner.nil? %>
@@ -170,6 +173,7 @@
                           <% end %>
                         </div>
                       </div>
+
                       <div class="row">
                         <div class="col-xs-12">
                           <hr>
@@ -177,6 +181,7 @@
                       </div>
                       <br />
                       <br />
+
                       <div class="row" >
                             <div class="col-xs-12">
                               <% if user_signed_in? %>
@@ -199,7 +204,7 @@
                             <label class="map_sign hidden-print">
                               <%= vessel.vsl_name %> (<%= vessel.imo %>); ETA@
                               <% if !vessel.positions.last.eta.blank? then %>
-                              <%= vessel.positions.last.eta.to_formatted_s(:day_month_year)  unless vessel.positions.nil? || vessel.positions.last.nil? || vessel.positions.last.eta.nil?%>
+                                <%= vessel.positions.last.eta.to_formatted_s(:day_month_year)  unless vessel.positions.nil? || vessel.positions.last.nil? || vessel.positions.last.eta.nil?%>
                               <% else %>
                                   <kbd><samp><%= "UNKNOWN" %></samp></kbd>
                               <% end %>
@@ -230,6 +235,11 @@
                       <p class="hidden-print">
                         <% unless vessel.imo.nil? %>
                             See the <%= link_to "position", 'http://www.marinetraffic.com/ais/embed/zoom:7/maptype:2/notation:true/shownames:true/mmsi:'+ vessel.mmsi + '/' %> or <%= link_to "general info", 'http://www.marinetraffic.com/en/ais/details/ships/'+ vessel.imo + '/' %> on the MarineTraffic website
+                          <% end %>
+                      </p>
+                      <p class="hidden-print">
+                        <% unless vessel.imo.nil? %>
+                            See the <%= link_to "position", 'http://www.vesselfinder.com/en-us/?mmsi='+ vessel.mmsi %> on the VesselFinder website
                           <% end %>
                       </p>
                     </div>

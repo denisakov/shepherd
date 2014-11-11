@@ -187,7 +187,9 @@ namespace :crawl do
 	else
 		puts "#{args.vessel_imos} IMO number was provided. We will find the vessel now."
 
-    	args.vessel_imos.each do |imo|
+    	all_vessels = args.vessel_imos[0]
+
+    	all_vessels.each do |imo|
 			pos = Array.new
 			
 			url = "http://www.marinetraffic.com/en/ais/details/ships/" + imo

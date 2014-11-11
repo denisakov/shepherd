@@ -56,6 +56,9 @@ namespace :crawl do
 		end
 		result
 	end
+	puts "________________-----------__________"
+	puts "We will scan for vessel's owners now"
+	puts " "
 
     agent = Mechanize.new
 	agent.user_agent_alias = 'Windows Mozilla'
@@ -254,7 +257,9 @@ namespace :crawl do
     else
        	puts "The IMO number was provided. So all we need is a single vessel."
 		#imo = args.imo
-		args.vessel_imos.each do |imo|
+		all_vessels = args.vessel_imos[0]
+
+    	all_vessels.each do |imo|
 			
 			v = Vessel.find_by_imo(imo)
 

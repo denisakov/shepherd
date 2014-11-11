@@ -53,7 +53,7 @@
 				                    <% else %>
 										<kbd><samp><%= "UNKNOWN" %></samp></kbd>
 				                    <% end %><br />
-						            <%= hidden_field_tag :imo, @vessel.imo %>
+						            <%= hidden_field_tag 'vessel_imos[]', @vessel.imo %>
 						            <%= hidden_field_tag :id, @vessel.id %>
 			                    <% end %>
 		                </div>
