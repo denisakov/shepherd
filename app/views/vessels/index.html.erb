@@ -1,15 +1,16 @@
-<% title "Vessels | #{@free_vessels.count}" %>
+<% title "Vessels | #{@free_russian_vessels.count}" %>
 <%= form_tag engage_vessels_path, :method => :post do %>
   <% if user_signed_in? %>
     <div class="hidden-print">
-      <span class="badge"><%= @free_vessels.count %></span>
-      <%= submit_tag 'Engage', :class => "btn btn-default btn-xs hidden-print" %></th>
+      <span class="badge"><%= @free_russian_vessels.count %></span>
+      <%= submit_tag 'Engage', :class => "btn btn-default btn-xs hidden-print" %>
       <%= link_to 'New vessel', new_vessel_path, :class => "btn btn-xs btn-default hidden-print" %>&nbsp;&nbsp;&nbsp;&nbsp;
       <%= link_to 'Scan', {:controller => :vessels, :action => :scan}, :class => "btn btn-default btn-xs hidden-print" %>
       <%= link_to 'PDF', vessels_path(:format => :pdf), :class => "btn btn-xs btn-default hidden-print" %>
     </div>
     <br />
   <% end %>
+
 <div class="table-responsive">
   <table class="table table-hover table-condensed" > 
       <thead>
@@ -33,8 +34,8 @@
         </tr>
       </thead>
       <tbody>
-        <% unless @free_vessels.nil? %>
-          <% @free_vessels.each do |vessel| %>
+        <% unless @free_russian_vessels.nil? %>
+          <% @free_russian_vessels.each do |vessel| %>
             <tr data-link="row" class="rowlink">
               <td class="rowlink-skip hidden-print"> 
                 <%= check_box_tag('vessel_ids[]', vessel.id) %>
@@ -109,6 +110,7 @@
           <% end %>
         <% end %>
       </tbody>
-    <% end %>
+    
   </table>
 </div>
+<% end %>

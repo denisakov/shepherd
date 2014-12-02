@@ -192,7 +192,20 @@ hr {
     padding:4px;
 }
 
-div .last-map
-{
+div .last-map {
     height:230px;
+}
+
+div .last-map-print {
+    height:300px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.page-break {
+    display:block;
+    clear:both;
+    page-break-after: always;
+}
+* {
+page-break-inside: avoid;
 }

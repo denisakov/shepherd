@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   resources :vessels do
     collection do
       get :dash
+      get :maps
       get :non_russian
       get :scan
       get :scan_gps

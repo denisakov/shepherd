@@ -5,61 +5,66 @@
 </H1>
 <div class="row">
 	<% @shipment.shipment_statuses.order('created_at DESC').each_with_index do |s, index| %>
-		 	<% if index == 0 %>
-		 	
+	 	<% if index == 0 %>
 		 	<H3>Latest:
 			  	<%= s.status %> <small>(<%= s.created_at.to_formatted_s(:d_m_y) %>)</small>
 		  	</H3>
-			<% else %>
+		<% else %>
 			<H4>
 				<%= s.status %> <small>(<%= s.created_at.to_formatted_s(:d_m_y) %>)</small>
 			</H4>
-			<% end %>	
+		<% end %>
 	<% end %>
 </div>
+<br />
+<br />
 <% if user_signed_in? %>
-	<button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#add_new_status" aria-expanded="false" aria-controls="add_new_status">
-	  New status +
-	</button>
-
-	<div id="add_new_status" class="collapse">
-		<br />
-		<%= form_for(:shipment_status, :url => create_shipment_status_shipment_path()) do |f| %>
-			<div class="form-group row">
-				<div class="col-sm-3">
-			    	<label for="inputShipmentId" class="control-label vmiddle">Status for shipment No: <%= @shipment.id %></label>
-				</div>
+	<div class="row hidden-print">
+		<div class="col-xs-3">
+			<button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#add_new_status" aria-expanded="false" aria-controls="add_new_status">
+			  New status
+			</button>
+		</div>
+		<div>
+			<div id="add_new_status" class="collapse hidden-print">
+				<%= form_for(:shipment_status, :url => create_shipment_status_shipment_path()) do |f| %>
+					<!-- <div class="form-group row">
+						<div class="col-sm-3">
+					    	<label for="inputShipmentId" class="control-label vmiddle">Status for shipment No: <%= @shipment.id %></label>
+						</div>
+					</div> -->
+					<div class="form-group row hidden-print">
+						<div class="field col-xs-5 row">
+					    	<%= f.text_field :status, :class => "form-control", :id => "inputStatus", :placeholder => "Please indicate current status" %>
+						</div>
+						<div class="actions form-group row">
+						  <div class="field col-xs-3">
+						    <%= f.submit "Create", :class => "btn btn-primary" %>&nbsp;&nbsp;&nbsp;
+						    <%= link_to 'Back', shipments_path, :class => "vbottom" %>
+						  </div>
+						</div>
+					</div>
+				<% end %>
 			</div>
-			<div class="form-group row">
-				<div class="col-sm-1">
-			    	<label for="inputStatus" class="control-label vmiddle">Status</label>
-				</div>
-				<div class="field col-sm-5 row">
-			    <%= f.text_field :status, :class => "form-control", :id => "inputStatus", :placeholder => "Please indicate a current status" %>
-				</div>
-				<div class="actions form-group row">
-				  <div class="field col-sm-6">
-				    <%= f.submit "Create", :class => "btn btn-lg btn-primary" %>&nbsp;&nbsp;&nbsp;
-				    <%= link_to 'Back', shipments_path, :class => "vbottom" %>
-				  </div>
-				</div>
-			</div>
-		<% end %>
+		</div>
 	</div>
 <% end %>
 <br />
 <br />
 <br />
+<br />
+<br />
 <div class="row hidden-print">
-	<div class="col-xs-1">
-		<%= link_to vessels_path, :type => "button", :class => "btn btn-default btn-xs"  do %>
+	<div class="col-xs-2">
+		<%= link_to shipments_path, :type => "button", :class => "btn btn-default btn-xs"  do %>
 			<i class="glyphicon glyphicon-arrow-left"></i> Back to list
 		<% end %>
 	</div>
-	<% if user_signed_in? %>
-		<div class="col-xs-2">
+	
+	<div>
+		<% if user_signed_in? %>
 			| <%= link_to 'Edit shipment', edit_shipment_path(@shipment) %>
-		</div>
-	<% end %>
+		<% end %>
+	</div>
+	
 </div>
-

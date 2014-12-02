@@ -290,7 +290,7 @@ namespace :crawl do
 						v.positions.build(:long => long, :lat => lat, :dest => dest, :prev_dest => prev_dest, :last_port => last_port, :eta => eta, :nav_status => nav_status, :last_upt => last_upt)
 						v.save!
 						puts "Inserted new directions as there was previously none"
-					elsif v.positions.last.last_upt < last_upt
+					elsif v.positions.last.last_upt.nil? || v.positions.last.last_upt < last_upt
 						v.positions.build(:dest => dest, :prev_dest => prev_dest, :last_port => last_port, :eta => eta, :nav_status => nav_status, :last_upt => last_upt)
 						v.save!
 						puts "Inserted new directions, because there was new info"

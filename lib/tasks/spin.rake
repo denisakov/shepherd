@@ -12,10 +12,15 @@ namespace :crawl do
         if args.count == 0 
             puts "we'll scan it all"
             Rake::Task['crawl:vessel'].invoke
+            Rake::Task['crawl:vessel'].reenable
             Rake::Task['crawl:owner'].invoke
+            Rake::Task['crawl:owner'].reenable
             Rake::Task['crawl:location'].invoke
+            Rake::Task['crawl:location'].reenable
             Rake::Task['crawl:gps'].invoke
+            Rake::Task['crawl:gps'].reenable
             Rake::Task['crawl:vessel_type'].invoke
+            Rake::Task['crawl:vessel_type'].reenable
 
         else
             # if args.vessel_imos.count !=~ /^[0-9]{7}*$/
@@ -29,9 +34,13 @@ namespace :crawl do
                 puts "#{vessel_imos}"
 
                 Rake::Task['crawl:vessel'].invoke(vessel_imos)
+                Rake::Task['crawl:vessel'].reenable
                 Rake::Task['crawl:owner'].invoke(vessel_imos)
+                Rake::Task['crawl:owner'].reenable
                 Rake::Task['crawl:location'].invoke(vessel_imos)
+                Rake::Task['crawl:location'].reenable
                 Rake::Task['crawl:gps'].invoke(vessel_imos)
+                Rake::Task['crawl:gps'].reenable
                 
                 #Rake::Task['crawl:vessel_type'].invoke(imo)
             # end

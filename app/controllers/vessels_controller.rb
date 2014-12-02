@@ -9,7 +9,8 @@ class VesselsController < ApplicationController
   def index
     #@all_vessels = Vessel.preload(:positions).order('vessels.vsl_name ASC').references(:positions)
     #@russian_vessels = Vessel.russian_vessels.preload(:positions).order('vessels.vsl_name ASC')
-    @free_vessels = Vessel.free_vessels.preload(:positions).order('vessels.vsl_type ASC')
+    @free_vessels = Vessel.free_vessels.order('vessels.vsl_type ASC')
+    @free_russian_vessels = Vessel.free_vessels.where('vsl_flag = ?', "Russia").order('vessels.vsl_type ASC')
 
     respond_to do |format|
       format.pdf do
@@ -26,7 +27,7 @@ class VesselsController < ApplicationController
   def non_russian
     #@all_vessels = Vessel.preload(:positions).order('vessels.vsl_name ASC').references(:positions)
     #@russian_vessels = Vessel.russian_vessels.preload(:positions).order('vessels.vsl_name ASC')
-    @non_russian_vessels = Vessel.free_vessels.where('vsl_flag != ?', "Russia").preload(:positions).order('vessels.vsl_type ASC')
+    @non_russian_vessels = Vessel.free_vessels.where('vsl_flag != ?', "Russia").order('vessels.vsl_type ASC')
 
     respond_to do |format|
       format.pdf do
@@ -40,15 +41,36 @@ class VesselsController < ApplicationController
 
   end
 
-  def dash
-    #@all_vessels = Vessel.preload(:positions).order('vessels.vsl_name ASC').references(:positions)
-    #@russian_vessels = Vessel.russian_vessels.preload(:positions).order('vessels.vsl_name ASC')
-    @engaged_vessels = Vessel.engaged_vessels.preload(:positions).order('vessels.vsl_name ASC')
+  def maps
     @active_vessels = Vessel.active_vessels.order('vessels.vsl_name ASC')
 
     respond_to do |format|
       format.pdf do
-            render :pdf => "Example PDF file",
+            render :pdf => 'Maps of currently engaged vessels',
+                   :template => 'vessels/active_maps.pdf.erb',
+                   :print_media_type => true,
+                   :page_size => "B6",
+                   :orientation => 'Landscape',
+                   :save_to_file => Rails.root.join("pdf", "active_maps.pdf"),
+                   :save_only    => true,
+                   :margin => {:top => 5,
+                           :bottom  => 5,
+                           :left  => 5,
+                           :right => 5},
+                   :show_as_html => params[:debug].present?
+            redirect_to :dash
+      end
+      format.html { render :dash }
+    end
+
+  end
+
+  def dash    
+    @active_vessels = Vessel.active_vessels.order('vessels.vsl_name ASC')
+
+    respond_to do |format|
+      format.pdf do
+            render :pdf => "Current dashboard",
                    :template => 'vessels/active.pdf.erb',
                    :print_media_type => true,
                    :page_size => "A4"
@@ -124,8 +146,8 @@ class VesselsController < ApplicationController
   # end
 
   def scan
-      Rake::Task['crawl:new'].reenable
       Rake::Task['crawl:new'].invoke(params[:vessel_imos])
+      Rake::Task['crawl:new'].reenable
 
       respond_to do |format|
         format.html { redirect_to dash_path, success: 'Vessel information has been updated!' }

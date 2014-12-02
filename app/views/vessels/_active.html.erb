@@ -1,6 +1,6 @@
 <div class="table-responsive">
-  <% @engaged_vessels.each do |vessel| %>
-    <% unless @engaged_vessels.empty? %>
+  <% @active_vessels.each do |vessel| %>
+    <% unless @active_vessels.empty? %>
       <div class="panel-group" id="accordion">
         <div class="panel panel-info">
           <div class="panel-heading">
@@ -85,7 +85,7 @@
                   </div>
                   <br />
                   <div class="row">
-                    <div class="col-xs-12">
+                    <div class="col-xs-6">
                       <small>Vessel data</small>
                       <hr>
                     </div>
@@ -125,7 +125,7 @@
                     </div>
                   </div>  
                 </div>
-                <div class="col-xs-7">
+                <div class="col-xs-6">
                   <% unless vessel.positions.empty? || vessel.positions.last.long.blank? || vessel.positions.last.lat.blank? %>
                     <% icon = URI.encode("icon:http://chart.apis.google.com/chart?chst=d_map_pin_icon_withshadow&chld=sail|color:black|label:|", "&, |")%>
 

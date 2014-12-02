@@ -18,7 +18,7 @@
               <input type="checkbox">
             </td>
             <td class="col-xs-9"><%= link_to " ", shipment_path(shipment) %><strong><%= shipment.vessel.vsl_name %></strong> |
-              <%= shipment.shipment_statuses.last.status %>
+              <%= shipment.shipment_statuses.last.status %> | <%= shipment.shipment_statuses.last.description unless shipment.shipment_statuses.last.description.nil? %>
             </td>
             <td>
               <%= shipment.shipment_statuses.last.status unless shipment.shipment_statuses.empty? %>
