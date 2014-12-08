@@ -1,0 +1,75 @@
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="heading<%= vessel.id %>">
+      <div class="panel-title">
+        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse<%= vessel.id %>" aria-expanded="false" aria-controls="collapse<%= vessel.id %>">
+          <small>Vessel data</small>
+        </a>
+      </div>
+    </div>
+    <div id="collapse<%= vessel.id %>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading<%= vessel.id %>">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-6">
+            <p>
+              <strong>Type:</strong>
+              <samp><%= vessel.vsl_type%></samp>
+            </p>
+            <% unless vessel.blt_year.nil? %>
+              <p>
+                <strong>Year built:</strong>
+                <samp><%= vessel.blt_year.to_formatted_s(:just_year) %></samp>
+              </p>
+            <% end %>
+          </div>
+          <div class="col-xs-6">
+            <p>
+              <strong>Flag:</strong>
+              <samp><%= vessel.vsl_flag unless vessel.nil? %></samp>
+            </p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-6">
+            <p>
+              <strong>IMO:</strong>
+              <samp><%= vessel.imo %></samp>
+            </p>
+          </div>
+          <div class="col-xs-6">
+            <p>
+              <strong>MMSI:</strong>
+              <samp><%= vessel.mmsi unless vessel.mmsi.nil? %></samp>
+            </p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <% unless vessel.owner.nil? %>
+              <strong>Owner:</strong>
+              <% if !vessel.owner.name.nil? %>
+                <samp><%= vessel.owner.name %></samp><br />
+              <% else %>
+                <kbd><samp><%= "UNKNOWN" %></samp></kbd><br />
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <% unless vessel.owner.nil? %>
+              <strong>Additional info:</strong>
+              <% if !vessel.owner.notes.nil? %>
+                <small><samp><%= vessel.owner.notes %></samp></small><br />
+              <% else %>
+                <kbd><samp><%= "UNKNOWN" %></samp></kbd><br />
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

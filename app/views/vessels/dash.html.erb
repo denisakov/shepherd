@@ -17,6 +17,7 @@
             <div class="panel panel-info">
               <div class="panel-heading">
                 <h1 class="panel-title" >
+                    <%= check_box_tag('vessel_ids[]', vessel.id) %>
                     <%= link_to vessel.vsl_name, vessel_path(vessel) %>
                     <% if vessel.positions.last.nav_status =~ /Way|Underway/ %>
                       <span class="label label-success"><%= vessel.positions.last.nav_status %></span>
@@ -82,26 +83,25 @@
                       <br / class="hidden-print">
                         <div class="row hidden-print">
                           <% if user_signed_in? %>
-                              <div class="col-xs-6 hidden-print">
-                                <% unless vessel.positions.last.nil? %>
-                                  <strong>Lat:</strong>
-                                    <% if !vessel.positions.last.lat.nil? %>
-                                      <samp><%= vessel.positions.last.lat %></samp><br />
-                                    <% else %>
-                                      <kbd><samp><%= "UNKNOWN" %></samp></kbd><br />
-                                    <% end %>
-                                  <strong>Long:</strong>
-                                    <% if !vessel.positions.last.long.nil? %>
-                                      <samp><%= vessel.positions.last.long %></samp>
-                                    <% else %>
-                                      <kbd><samp><%= "UNKNOWN" %></samp></kbd>
-                                    <% end %><br />
-                                    <% rostov_lat = 47.215514 %>
-                                    <% rostov_long = 39.698106 %>
-<% d=2*6371*Math.asin(Math.sqrt((Math.sin((vessel.positions.last.lat*3.14/180)-(rostov_lat*3.14/180))**2)+(Math.sin((vessel.positions.last.long*3.14/180)-(rostov_long*3.14/180))**2)*Math.cos(vessel.positions.last.lat*3.14/180)*Math.cos(rostov_lat*3.14/180))) %>
-                                    <% if d < 200.0 %>
-                                     <p>"Rostov"</p>
-                                   <% end %>
+                              <div class="col-xs-12 hidden-print">
+                                <% if !vessel.positions.last.nil? && !vessel.positions.last.now_near.blank? %>
+                                  The vessel is currently near <strong><%= vessel.positions.last.now_near %></strong>
+                                <% else %>
+                                  <% unless vessel.positions.last.nil? %>
+                                    <strong>Lat:</strong>
+                                      <% if !vessel.positions.last.lat.nil? %>
+                                        <samp><%= vessel.positions.last.lat %></samp><br />
+                                      <% else %>
+                                        <kbd><samp><%= "UNKNOWN" %></samp></kbd><br />
+                                      <% end %>
+                                    <strong>Long:</strong>
+                                      <% if !vessel.positions.last.long.nil? %>
+                                        <samp><%= vessel.positions.last.long %></samp>
+                                      <% else %>
+                                        <kbd><samp><%= "UNKNOWN" %></samp></kbd>
+                                      <% end %><br />
+                                     <% end %>
+                                  <% end %>
                                 <% end %>
                               </div>
                               
@@ -111,83 +111,9 @@
                           <!--#Empty row-->
                       </div>
                       <br />
-                      
-                      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                        <div class="panel panel-default">
-                          <div class="panel-heading" role="tab" id="heading<%= vessel.id %>">
-                            <div class="panel-title">
-                              <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse<%= vessel.id %>" aria-expanded="false" aria-controls="collapse<%= vessel.id %>">
-                                <small>Vessel data</small>
-                              </a>
-                            </div>
-                          </div>
-                          <div id="collapse<%= vessel.id %>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading<%= vessel.id %>">
-                            <div class="panel-body">
-                              <div class="row">
-                                <div class="col-xs-6">
-                                  <p>
-                                    <strong>Type:</strong>
-                                    <samp><%= vessel.vsl_type%></samp>
-                                  </p>
-                                  <% unless vessel.blt_year.nil? %>
-                                    <p>
-                                      <strong>Year built:</strong>
-                                      <samp><%= vessel.blt_year.to_formatted_s(:just_year) %></samp>
-                                    </p>
-                                  <% end %>
-                                </div>
-                                <div class="col-xs-6">
-                                  <p>
-                                    <strong>Flag:</strong>
-                                    <samp><%= vessel.vsl_flag unless vessel.nil? %></samp>
-                                  </p>
-                                </div>
-                              </div>
-
-                              <div class="row">
-                                <div class="col-xs-6">
-                                  <p>
-                                    <strong>IMO:</strong>
-                                    <samp><%= vessel.imo %></samp>
-                                  </p>
-                                </div>
-                                <div class="col-xs-6">
-                                  <p>
-                                    <strong>MMSI:</strong>
-                                    <samp><%= vessel.mmsi unless vessel.mmsi.nil? %></samp>
-                                  </p>
-                                </div>
-                              </div>
-
-                              <div class="row">
-                                <div class="col-xs-6">
-                                  <% unless vessel.owner.nil? %>
-                                    <strong>Owner:</strong>
-                                    <% if !vessel.owner.name.nil? %>
-                                      <samp><%= vessel.owner.name %></samp><br />
-                                    <% else %>
-                                      <kbd><samp><%= "UNKNOWN" %></samp></kbd><br />
-                                    <% end %>
-                                  <% end %>
-                                </div>
-                                <div class="col-xs-6">
-                                  <% unless vessel.owner.nil? %>
-                                    <strong>Additional info:</strong>
-                                    <% if !vessel.owner.notes.nil? %>
-                                      <small><samp><%= vessel.owner.notes %></samp></small><br />
-                                    <% else %>
-                                      <kbd><samp><%= "UNKNOWN" %></samp></kbd><br />
-                                    <% end %>
-                                  <% end %>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    <br />
-                    <br />
-
+                      <%= render partial: 'vessels/vessel_data', locals: {vessel: vessel} %>
+                      <br />
+                      <br />
                       <div class="row" >
                             <div class="col-xs-12">
                               <% if user_signed_in? %>
@@ -233,4 +159,3 @@
         <% end %>
       <% end %>
     </div>
-<% end %>

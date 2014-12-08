@@ -5,6 +5,7 @@ namespace :crawl do
     require 'open-uri'
     require 'roo'
    	require 'mechanize'
+   	require 'mathn'
 
    	puts "_____________________________________"
     puts "Starting to look for GPS COORDINATES"
@@ -91,6 +92,36 @@ namespace :crawl do
 
 					#puts "GPS - #{long}, #{lat}"
 
+					IO.foreach('lib/assets/where.txt') do |line|
+						ref_now_near = line.split(/\t/)[0].to_s
+						ref_lat = line.split(/\t/)[1].to_f
+						puts "#{ref_lat}"
+						ref_long = line.split(/\t/)[2].to_f
+						puts "#{ref_long}"
+						ref_d = line.split(/\t/)[3].to_i
+						puts "#{ref_d}"
+						R = "6371".to_i
+						latrad = lat.to_f*Math::PI/180
+						reflatrad = ref_lat*Math::PI/180
+						sinlatsq = Math.sin(latrad-reflatrad)**2
+						longrad = long.to_f*Math::PI/180
+						reflongrad = ref_long*Math::PI/180
+						sinlongsq = Math.sin(longrad-reflongrad)**2
+						coslat = Math.cos(latrad)
+						cosreflat = Math.cos(reflatrad)
+						sq = sinlatsq+sinlongsq*coslat*cosreflat
+						d = 2*R*Math.asin(Math.sqrt(sq))
+						puts "#{d}"
+						if d < ref_d then
+							@now_near = ref_now_near
+							puts "The vessel is currently near #{@now_near}"
+							break
+						else
+							@now_near = ""
+							next
+						end
+					end
+
 					if !agent.page.search('span:contains("Info Received:")').empty? then
 						last_upt = Date.parse(agent.page.search('span:contains("Info Received:")')[0].parent.children[3].text)
 					elsif agent.page.search('span:contains("Last report:")')[0].parent.children[5].text =~ /\d/
@@ -101,12 +132,12 @@ namespace :crawl do
 					
 					v = Vessel.find_by_mmsi(mmsi)
 					if v.positions.empty?
-						v.positions.build(:long => long, :lat => lat, :last_upt => last_upt, :nav_status => nav_status)
+						v.positions.build(:long => long, :lat => lat, :last_upt => last_upt, :nav_status => nav_status, :now_near => @now_near)
 						v.save!
 						puts "Created a new position for the vessel."
 						puts " "
 					elsif v.positions.last.updated_at < Time.now
-						v.positions.last.update_attributes(:long => long, :lat => lat, :last_upt => last_upt, :nav_status => nav_status)
+						v.positions.last.update_attributes(:long => long, :lat => lat, :last_upt => last_upt, :nav_status => nav_status, :now_near => @now_near)
 						v.save!
 						puts "Updated the last position for the vessel."
 						puts " "
@@ -192,6 +223,36 @@ namespace :crawl do
 				
 				#puts "GPS - #{long}, #{lat}"
 
+				IO.foreach('lib/assets/where.txt') do |line|
+					ref_now_near = line.split(/\t/)[0].to_s
+					ref_lat = line.split(/\t/)[1].to_f
+					puts "#{ref_lat}"
+					ref_long = line.split(/\t/)[2].to_f
+					puts "#{ref_long}"
+					ref_d = line.split(/\t/)[3].to_i
+					puts "#{ref_d}"
+					R = "6371".to_i
+						latrad = lat.to_f*Math::PI/180
+						reflatrad = ref_lat*Math::PI/180
+						sinlatsq = Math.sin(latrad-reflatrad)**2
+						longrad = long.to_f*Math::PI/180
+						reflongrad = ref_long*Math::PI/180
+						sinlongsq = Math.sin(longrad-reflongrad)**2
+						coslat = Math.cos(latrad)
+						cosreflat = Math.cos(reflatrad)
+						sq = sinlatsq+sinlongsq*coslat*cosreflat
+						d = 2*R*Math.asin(Math.sqrt(sq))
+					puts "#{d}"
+					if d < ref_d then
+						@now_near = ref_now_near
+						puts "The vessel is currently near #{@now_near}"
+						break
+					else
+						@now_near = ""
+						next
+					end
+				end
+
 				if !agent.page.search('span:contains("Info Received:")').empty? then
 					last_upt = Date.parse(agent.page.search('span:contains("Info Received:")')[0].parent.children[3].text)
 				elsif agent.page.search('span:contains("Last report:")')[0].parent.children[5].text =~ /\d/
@@ -204,10 +265,10 @@ namespace :crawl do
 				nav_status = agent.page.search('span:contains("Status")')[1].parent.children[3].text unless agent.page.search('span:contains("Status")')[1].nil?
 
 				if v.positions.empty?
-					v.positions.build(:long => long, :lat => lat, :last_upt => last_upt, :nav_status => nav_status)
+					v.positions.build(:long => long, :lat => lat, :last_upt => last_upt, :nav_status => nav_status, :now_near => @now_near)
 					v.save!
 				elsif v.positions.last.updated_at < Time.now
-					v.positions.last.update_attributes(:long => long, :lat => lat, :updated_at => DateTime.now, :last_upt => last_upt, :nav_status => nav_status)
+					v.positions.last.update_attributes(:long => long, :lat => lat, :updated_at => DateTime.now, :last_upt => last_upt, :nav_status => nav_status, :now_near => @now_near)
 					v.save!
 				elsif
 					puts "Skipping vessel, Because there is nothing to update"
