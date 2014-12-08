@@ -39,15 +39,6 @@
 					<%= form_tag scan_gps_vessels_path, :method => :get do %>
 					<div class="row">
 						<% if user_signed_in? %>
-	                		<div class="col-xs-6">
-	                			<% unless @vessel.positions.last.nil? && @vessel.positions.last.now_near.empty? %>
-	                			The vessel is near <strong><%= @vessel.positions.last.now_near %></strong>
-	                			<% end %>
-	                		</div>
-	            		<% end %>
-                	</div>
-					<div class="row">
-						<% if user_signed_in? %>
                 		<div class="col-xs-6">
 							<% unless @vessel.positions.last.nil? %>
 								<strong>Latitude:</strong>
@@ -64,7 +55,7 @@
 				                    <% end %><br />
 						            <%= hidden_field_tag 'vessel_imos[]', @vessel.imo %>
 						            <%= hidden_field_tag :id, @vessel.id %>
-			                <% end %>
+			                    <% end %>
 		                </div>
 		                <div class="col-xs-6">
 		                	<%= submit_tag 'Update GPS', :class => "btn btn-default btn-xs vbottom" %><br />

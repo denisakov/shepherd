@@ -42,23 +42,27 @@ class VesselsController < ApplicationController
   end
 
   def maps
-    vessels = Vessel.where(:id => params[:vessel_ids])
-    vessels.each do |v|
-        render :pdf => 'Maps of currently engaged vessels',
-               :template => 'vessels/active_maps.pdf.erb',
-               :print_media_type => true,
-               :page_size => "B6",
-               :orientation => 'Landscape',
-               :save_to_file => Rails.root.join("pdf", "#{Date.today.to_formatted_s(:day_month_year)}_#{v.vsl_name}.pdf"),
-               :save_only    => true,
-               :margin => {:top => 5,
-                       :bottom  => 5,
-                       :left  => 5,
-                       :right => 5},
-               :show_as_html => params[:debug].present?
-        redirect_to :dash
+    @active_vessels = Vessel.active_vessels.order('vessels.vsl_name ASC')
+
+    respond_to do |format|
+      format.pdf do
+            render :pdf => 'Maps of currently engaged vessels',
+                   :template => 'vessels/active_maps.pdf.erb',
+                   :print_media_type => true,
+                   :page_size => "B6",
+                   :orientation => 'Landscape',
+                   :save_to_file => Rails.root.join("pdf", "active_maps.pdf"),
+                   :save_only    => true,
+                   :margin => {:top => 5,
+                           :bottom  => 5,
+                           :left  => 5,
+                           :right => 5},
+                   :show_as_html => params[:debug].present?
+            redirect_to :dash
+      end
+      format.html { render :dash }
     end
-    redirect_to :dash
+
   end
 
   def dash    
@@ -142,7 +146,7 @@ class VesselsController < ApplicationController
   # end
 
   def scan
-      Rake::Task['crawl:new'].invoke(params[:vessel_imos][:file])
+      Rake::Task['crawl:new'].invoke(params[:vessel_imos])
       Rake::Task['crawl:new'].reenable
 
       respond_to do |format|
