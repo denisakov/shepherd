@@ -1,4 +1,3 @@
-City	Lat	Long	Dist
 Rostov	47.215514	39.698106	150
 Kerch	45.244551	36.559477	70
 Bosphorus	41.09579	29.06586	25

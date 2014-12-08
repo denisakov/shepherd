@@ -30,7 +30,8 @@ namespace :crawl do
 			agent.cookie_jar.clear!
 
 			agent.user_agent_alias = m[n][n]
-
+			puts "_____LOCATION______"
+			puts ""
 			puts "Assigned the AGENT - #{m[n][n]}"
 
 			if index % 40 == 0
@@ -46,6 +47,7 @@ namespace :crawl do
 			sleep rand(1..9)
 			puts url
 
+			retries = 10
 			begin
 				agent.get(url)
 				puts "Loaded page for vessel #{mmsi}"
@@ -59,13 +61,14 @@ namespace :crawl do
 					url = "http://www.vesselfinder.com/en-us/vessels/IMO-" + imo + "-MMSI-" + mmsi
 					agent.get(url)
 					sleep rand(2..6)
-					if agent.page.search('span:contains("Last report:")')[0].parent.children[5] =~ /\d/
+					if agent.page.search('span:contains("Last report:")')[0] && agent.page.search('span:contains("Last report:")')[0].parent.children[5] =~ /\d/
 						last_upt = Date.parse(agent.page.search('span:contains("Last report:")')[0].parent.children[5].text)
+						puts "Last update #{last_upt}"
 					else
 						last_upt = ""
+						puts ">>>>>>>>>> Last update time is UNKNOWN <<<<<<<<<<<"
 					end
 				end
-				puts "Last update #{last_upt}"
 
 				# general status of the vessel
 				# agent.page.search('span:contains("Status")')[0].parent.children[3].text
@@ -182,6 +185,17 @@ namespace :crawl do
 
 			rescue Mechanize::ResponseCodeError => ex
 				puts ex.response_code
+			rescue SocketError => e
+		    	puts e
+		    	if retries > 0
+		    		puts "SocketError! Retrying connection after 1 second..."
+		    		retries -= 1
+		    		sleep(1)
+		    		retry
+		    	else
+		    		puts "SocketError: Not responding after 10 retries! Giving up!"
+		    		next
+		    	end
 			end
 		end
 	else
@@ -321,6 +335,17 @@ namespace :crawl do
 				sleep rand(2..6)
 			rescue Mechanize::ResponseCodeError => ex
 				puts ex.response_code
+			rescue SocketError => e
+		    	puts e
+		    	if retries > 0
+		    		puts "SocketError! Retrying connection after 1 second..."
+		    		retries -= 1
+		    		sleep(1)
+		    		retry
+		    	else
+		    		puts "SocketError: Not responding after 10 retries! Giving up!"
+		    		next
+		    	end
 			end
 		end
 	end
