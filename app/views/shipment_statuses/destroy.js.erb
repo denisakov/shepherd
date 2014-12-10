@@ -1,0 +1,8 @@
+$('#shipment_status<%= @shipment_status.id %>').remove();
+$('a.delete').on('click', function() {
+	if(confirm("Are you sure?")){
+	$(this).closest('div .row').delay().fadeOut();
+	}else{
+		return false;
+	}
+});

@@ -16,7 +16,7 @@
         <% unless vessel.positions.empty? || vessel.positions.last.long.blank? || vessel.positions.last.lat.blank? %>
           <% icon = URI.encode("icon:http://chart.apis.google.com/chart?chst=d_map_pin_icon_withshadow&chld=sail|color:black|label:#{vessel.vsl_name}|", "&, |")%>
 
-          <% boom = "http://maps.googleapis.com/maps/api/staticmap?zoom=7&size=600x320&scale:2&format=png32&maptype=roadmap&markers=#{icon}#{vessel.positions.last.lat},#{vessel.positions.last.long}" %>
+          <% boom = "http://maps.googleapis.com/maps/api/staticmap?zoom=7&size=600x480&scale:2&format=png32&maptype=roadmap&markers=#{icon}#{vessel.positions.last.lat},#{vessel.positions.last.long}" %>
 
         <div class="panel-body last-map-print" style="background: url('<%= boom %>') center no-repeat" >
         </div>

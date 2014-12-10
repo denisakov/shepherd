@@ -100,7 +100,7 @@ namespace :crawl do
 						puts "#{ref_long}"
 						ref_d = line.split(/\t/)[3].to_i
 						puts "#{ref_d}"
-						R = "6371".to_i
+						
 						latrad = lat.to_f*Math::PI/180
 						reflatrad = ref_lat*Math::PI/180
 						sinlatsq = Math.sin(latrad-reflatrad)**2
@@ -110,7 +110,7 @@ namespace :crawl do
 						coslat = Math.cos(latrad)
 						cosreflat = Math.cos(reflatrad)
 						sq = sinlatsq+sinlongsq*coslat*cosreflat
-						d = 2*R*Math.asin(Math.sqrt(sq))
+						d = 2*6371*Math.asin(Math.sqrt(sq))
 						puts "#{d}"
 						if d < ref_d then
 							@now_near = ref_now_near
@@ -231,7 +231,7 @@ namespace :crawl do
 					puts "#{ref_long}"
 					ref_d = line.split(/\t/)[3].to_i
 					puts "#{ref_d}"
-					R = "6371".to_i
+					
 						latrad = lat.to_f*Math::PI/180
 						reflatrad = ref_lat*Math::PI/180
 						sinlatsq = Math.sin(latrad-reflatrad)**2
@@ -241,7 +241,7 @@ namespace :crawl do
 						coslat = Math.cos(latrad)
 						cosreflat = Math.cos(reflatrad)
 						sq = sinlatsq+sinlongsq*coslat*cosreflat
-						d = 2*R*Math.asin(Math.sqrt(sq))
+						d = 2*6371*Math.asin(Math.sqrt(sq))
 					puts "#{d}"
 					if d < ref_d then
 						@now_near = ref_now_near

@@ -1,21 +1,29 @@
 <% title "Shipment" %>
 
 <H1>
-  <strong><%= @shipment.vessel.vsl_name %></strong>
+  <strong>M/V "<%= @shipment.vessel.vsl_name %>"</strong>
 </H1>
-<div class="row">
-	<% @shipment.shipment_statuses.order('created_at DESC').each_with_index do |s, index| %>
-	 	<% if index == 0 %>
-		 	<H3>Latest:
-			  	<%= s.status %> <small>(<%= s.created_at.to_formatted_s(:d_m_y) %>)</small>
-		  	</H3>
-		<% else %>
-			<H4>
-				<%= s.status %> <small>(<%= s.created_at.to_formatted_s(:d_m_y) %>)</small>
-			</H4>
-		<% end %>
-	<% end %>
+<div class="12">
+	<hr>
 </div>
+<% @shipment.shipment_statuses.order('created_at DESC').each_with_index do |s, index| %>
+	<div class="row">
+		<h4>
+			<div class="col-xs-4 col-sm-6">
+				<%= s.created_at.to_formatted_s(:d_m_y) %>&nbsp;&mdash;
+			</div>
+			<div class="col-xs-3 col-sm-5">
+				<%= s.status %>
+			</div>
+			<div class="col-xs-5 col-sm-1 hidden-print">
+				<% if user_signed_in? %>
+					<%= link_to '<i class="glyphicon glyphicon-remove"></i>'.html_safe, s, :class => 'delete', method: :delete, :remote => true %>
+				<% end %>
+			</div>
+		</h4>
+	</div>
+
+<% end %>
 <br />
 <br />
 <% if user_signed_in? %>
@@ -40,7 +48,7 @@
 						<div class="actions form-group row">
 						  <div class="field col-xs-3">
 						    <%= f.submit "Create", :class => "btn btn-primary" %>&nbsp;&nbsp;&nbsp;
-						    <%= link_to 'Back', shipments_path, :class => "vbottom" %>
+						    <a href="#" data-toggle="collapse" data-target="#add_new_status" aria-expanded="false" aria-controls="add_new_status">Cancel</a>
 						  </div>
 						</div>
 					</div>
@@ -60,11 +68,4 @@
 			<i class="glyphicon glyphicon-arrow-left"></i> Back to list
 		<% end %>
 	</div>
-	
-	<div>
-		<% if user_signed_in? %>
-			| <%= link_to 'Edit shipment', edit_shipment_path(@shipment) %>
-		<% end %>
-	</div>
-	
 </div>
