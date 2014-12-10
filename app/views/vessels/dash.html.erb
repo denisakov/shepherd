@@ -1,161 +1,161 @@
 <% title "Dashboard | #{@active_vessels.count}" %>
 <%= form_tag scan_vessels_path, :method => :get do %>
-  <% if user_signed_in? %>
-    <div class="hidden-print">
-      <span class="badge"><%= @active_vessels.count %></span>
-      <%= submit_tag 'Update', :class => "btn btn-default btn-xs hidden-print" %> 
-      <%= link_to 'PDF', dash_path(:format => :pdf), :class => "btn btn-xs btn-default hidden-print" %>
-      <%= link_to 'Save maps', maps_vessels_path(:format => :pdf), :class => "btn btn-xs btn-default hidden-print" %>
-    </div>
-    <br/>
-  <% end %>
-    <div class="table-responsive">
-      <% @active_vessels.each do |vessel| %>
-        <% unless @active_vessels.empty? %>
-          <%= hidden_field_tag 'vessel_imos[]', vessel.imo %>
-          <div class="panel-group">
-            <div class="panel panel-info">
-              <div class="panel-heading">
-                <h1 class="panel-title" >
-                    <%= check_box_tag('vessel_ids[]', vessel.id) %>
-                    <%= link_to vessel.vsl_name, vessel_path(vessel) %>
-                    <% if vessel.positions.last.nav_status =~ /Way|Underway/ %>
-                      <span class="label label-success"><%= vessel.positions.last.nav_status %></span>
-                    <% elsif vessel.positions.last.nav_status =~ /Unknown/%>
-                      <span class="label label-default"><%= vessel.positions.last.nav_status %></span>
-                    <% else %>
-                      <span class="label label-warning"><%= vessel.positions.last.nav_status %></span>
-                    <% end %>
-                  <% if user_signed_in? %>
-                    <button type="button" class="btn btn-xs btn-default pull-right hidden-print">Wha?</button>
-                    <button type="button" class="btn btn-xs btn-info pull-right hidden-print">No-o</button>
-                  <% end %>
-                    <small>(LAST UPDATE: <strong><%= vessel.positions.last.updated_at.strftime("%d-%b %H:%M") %>)</strong></small>                
-                </h1>
-              </div>
-              <div id="<%= vessel.id %>">
-                <div class="panel-body">
-                  <div class="row">
-                    <div class="col-xs-5">
-                      <div class="row">
-                        <div class="col-xs-8">
-                          <small>Direction</small>
-                        </div>
-                        <div class="col-xs-4">
-                          <small>ETA</small>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-xs-12">
-                          <hr>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-xs-8">
-                            <% if !vessel.positions.last.nil? then %>
-                                <h4>
-                                  <% if !vessel.positions.last.prev_dest.blank? then %>
-                                    <%= vessel.positions.last.prev_dest %>
-                                  <% else %>
-                                    <kbd><samp><%= "UNKNOWN" %></samp></kbd>
-                                  <% end %>
-                                    <span class="glyphicon glyphicon-arrow-right"></span> 
-                                  <% if !vessel.positions.last.dest.blank? then %>
-                                    <%= vessel.positions.last.dest %>
-                                  <% else %>
-                                    <kbd><samp><%= "UNKNOWN" %></samp></kbd>
-                                  <% end %>
-                                </h4>
-                            <% end %>
-                        </div>
-                        <div class="col-xs-4">
-                          <h4>
-                            <% if !vessel.positions.last.nil? then %>
-                              <% if !vessel.positions.last.eta.blank? then %>
-                                <%= vessel.positions.last.eta.to_formatted_s(:day_month)  unless vessel.positions.nil? || vessel.positions.last.nil? || vessel.positions.last.eta.nil?%>&nbsp;
-                              <% else %>
-                                  <kbd><samp><%= "UNKNOWN" %>&nbsp;</samp></kbd>
-                              <% end %>
-                            <% end %>
-                          </h4>
-                        </div>
-                      </div>
-                      <br / class="hidden-print">
-                        <div class="row hidden-print">
-                          <% if user_signed_in? %>
-                              <div class="col-xs-12 hidden-print">
-                                <% if !vessel.positions.last.nil? && !vessel.positions.last.now_near.blank? %>
-                                  The vessel is currently near <strong><%= vessel.positions.last.now_near %></strong>
+    <% if user_signed_in? %>
+        <div class="hidden-print">
+            <span class="badge"><%= @active_vessels.count %></span>
+            <%= submit_tag 'Update', :class => "btn btn-default btn-xs hidden-print" %> 
+            <%= link_to 'PDF', dash_path(:format => :pdf), :class => "btn btn-xs btn-default hidden-print" %>
+            <%= link_to 'Save maps', maps_vessels_path(:format => :pdf), :class => "btn btn-xs btn-default hidden-print" %>
+        </div>
+        <br/>
+    <% end %>
+    <div class="table-responsive">  
+        <% if !@active_vessels.blank? %>
+            <% @active_vessels.each do |vessel| %>
+                <div class="panel-group" id="#accordian">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h1 class="panel-title" >
+                                <%= hidden_field_tag 'vessel_imos[]', vessel.imo %>
+                                <%= link_to vessel.vsl_name, vessel_path(vessel) %>
+                                <% if vessel.positions.last.nav_status =~ /Way|Underway/ %>
+                                    <span class="label label-success"><%= vessel.positions.last.nav_status %></span>
+                                <% elsif vessel.positions.last.nav_status =~ /Unknown/%>
+                                    <span class="label label-default"><%= vessel.positions.last.nav_status %></span>
                                 <% else %>
-                                  <% unless vessel.positions.last.nil? %>
-                                    <strong>Lat:</strong>
-                                      <% if !vessel.positions.last.lat.nil? %>
-                                        <samp><%= vessel.positions.last.lat %></samp><br />
-                                      <% else %>
-                                        <kbd><samp><%= "UNKNOWN" %></samp></kbd><br />
-                                      <% end %>
-                                    <strong>Long:</strong>
-                                      <% if !vessel.positions.last.long.nil? %>
-                                        <samp><%= vessel.positions.last.long %></samp>
-                                      <% else %>
-                                        <kbd><samp><%= "UNKNOWN" %></samp></kbd>
-                                      <% end %><br />
-                                     <% end %>
-                                  <% end %>
+                                    <span class="label label-warning"><%= vessel.positions.last.nav_status %></span>
                                 <% end %>
-                              </div>
-                              
-                          <% end %>  
+                                <small>(LAST UPDATE: <strong><%= vessel.positions.last.updated_at.strftime("%d-%b %H:%M") %>)</strong></small>
+                                <% if user_signed_in? %>
+                                    <button type="button" class="btn btn-xs btn-default pull-right hidden-print">Wha?</button>
+                                    <button type="button" class="btn btn-xs btn-info pull-right hidden-print">No-o</button>
+                                <% end %>
+                            </h1>
                         </div>
-                      <div class="row">
-                          <!--#Empty row-->
-                      </div>
-                      <br />
-                      <%= render partial: 'vessels/vessel_data', locals: {vessel: vessel} %>
-                      <br />
-                      <br />
-                      <div class="row" >
-                            <div class="col-xs-12">
-                              <% if user_signed_in? %>
-                                <p class="hidden-print">
-                                  <%= link_to 'Edit', edit_vessel_path(vessel) %> |
-                                  <%= link_to 'Add new vessel', new_vessel_path %>
-                                </p>
-                              <% end %>
+
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-5 col-lg-5">
+                                    <div class="row">
+                                        <div class="col-xs-8">
+                                            <small>Direction</small>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <small>ETA</small>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <hr>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-8">
+                                            <% if !vessel.positions.last.nil? then %>
+                                                <h4>
+                                                    <% if !vessel.positions.last.prev_dest.blank? then %>
+                                                        <%= vessel.positions.last.prev_dest %>
+                                                    <% else %>
+                                                        <kbd><samp><%= "UNKNOWN" %></samp></kbd>
+                                                    <% end %>
+                                                        <span class="glyphicon glyphicon-arrow-right"></span> 
+                                                    <% if !vessel.positions.last.dest.blank? then %>
+                                                        <%= vessel.positions.last.dest %>
+                                                    <% else %>
+                                                        <kbd><samp><%= "UNKNOWN" %></samp></kbd>
+                                                    <% end %>
+                                                </h4>
+                                            <% end %>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <h4>
+                                                <% if !vessel.positions.last.nil? then %>
+                                                    <% if !vessel.positions.last.eta.blank? then %>
+                                                        <%= vessel.positions.last.eta.to_formatted_s(:day_month)  unless vessel.positions.nil? || vessel.positions.last.nil? || vessel.positions.last.eta.nil?%>&nbsp;
+                                                    <% else %>
+                                                        <kbd><samp><%= "UNKNOWN" %>&nbsp;</samp></kbd>
+                                                    <% end %>
+                                                <% end %>
+                                            </h4>
+                                        </div>
+                                        <br />
+                                    </div>
+                                    
+                                    <% if user_signed_in? %>
+                                        <div class="row hidden-print">
+                                            <div class="hidden-print col-xs-12">
+                                                <% if !vessel.positions.last.nil? && !vessel.positions.last.now_near.blank? %>
+                                                    The vessel is currently near <strong><%= vessel.positions.last.now_near %></strong>
+                                                <% else %>
+                                                    <% if !vessel.positions.last.nil? %>
+                                                        <strong>Lat:</strong>
+                                                        <% if !vessel.positions.last.lat.nil? %>
+                                                            <samp><%= vessel.positions.last.lat %></samp><br />
+                                                        <% else %>
+                                                            <kbd><samp><%= "UNKNOWN" %></samp></kbd><br />
+                                                        <% end %>
+                                                        <strong>Long:</strong>
+                                                        <% if !vessel.positions.last.long.nil? %>
+                                                            <samp><%= vessel.positions.last.long %></samp>
+                                                        <% else %>
+                                                            <kbd><samp><%= "UNKNOWN" %></samp></kbd>
+                                                        <% end %>
+                                                        <br />
+                                                    <% end %>
+                                                <% end %>
+                                            </div>
+                                        </div>
+                                    <% end %>
+                                    <br />
+                                    <% if user_signed_in? %>
+                                        <%= render partial: 'vessels/vessel_data', locals: {vessel: vessel} %>
+                                    <% end %>
+                                    
+                                    <br />
+                                    <% if user_signed_in? %>
+                                        <div class="row">
+                                            <p class="hidden-print col-xs-12">
+                                                <%= link_to 'Edit', edit_vessel_path(vessel) %> |
+                                                <%= link_to 'Add new vessel', new_vessel_path %>
+                                            </p>
+                                        </div>
+                                    <% end %>
+                                </div>
+                                <div class="col-xs-12 col-sm-7 col-lg-7">
+                                  <% unless vessel.positions.empty? || vessel.positions.last.long.blank? || vessel.positions.last.lat.blank? %>
+                                    <% icon = URI.encode("icon:http://chart.apis.google.com/chart?chst=d_map_pin_icon_withshadow&chld=sail|color:black|label:|", "&, |")%>
+
+                                    <% boom = "http://maps.googleapis.com/maps/api/staticmap?zoom=7&size=640x300&scale:2&maptype=roadmap&markers=#{icon}#{vessel.positions.last.lat},#{vessel.positions.last.long}" %>
+
+                                    <div style="background: url('<%= boom %>') center no-repeat" class="last-map">
+                                      <div>
+                                        <label class="map_sign hidden-print">
+                                          <%= vessel.vsl_name %> (<%= vessel.imo %>)
+                                        </label>
+                                      </div>
+                                    </div>
+                                    <br / class="hidden-print">
+                                  <% end %>
+                                  <p class="hidden-print">
+                                    <% unless vessel.imo.nil? %>
+                                        See the <%= link_to "position", 'http://www.marinetraffic.com/ais/embed/zoom:7/maptype:2/notation:true/shownames:true/mmsi:'+ vessel.mmsi + '/' %> or <%= link_to "general info", 'http://www.marinetraffic.com/en/ais/details/ships/'+ vessel.imo + '/' %> on the MarineTraffic website
+                                      <% end %>
+                                  </p>
+                                  <p class="hidden-print">
+                                    <% unless vessel.imo.nil? %>
+                                        See the <%= link_to "position", 'http://www.vesselfinder.com/en-us/?mmsi='+ vessel.mmsi %> on the VesselFinder website
+                                    <% end %>
+                                  </p>
+                                </div>
                             </div>
-                      </div>   
-                    </div>
-                    <div class="col-xs-7">
-                      <% unless vessel.positions.empty? || vessel.positions.last.long.blank? || vessel.positions.last.lat.blank? %>
-                        <% icon = URI.encode("icon:http://chart.apis.google.com/chart?chst=d_map_pin_icon_withshadow&chld=sail|color:black|label:|", "&, |")%>
-
-                        <% boom = "http://maps.googleapis.com/maps/api/staticmap?zoom=7&size=640x300&scale:2&maptype=roadmap&markers=#{icon}#{vessel.positions.last.lat},#{vessel.positions.last.long}" %>
-
-                        <div style="background: url('<%= boom %>') center" class="last-map">
-                          <div>
-                            <label class="map_sign hidden-print">
-                              <%= vessel.vsl_name %> (<%= vessel.imo %>)
-                            </label>
-                          </div>
                         </div>
-                        <br / class="hidden-print">
-                      <% end %>
-                      <p class="hidden-print">
-                        <% unless vessel.imo.nil? %>
-                            See the <%= link_to "position", 'http://www.marinetraffic.com/ais/embed/zoom:7/maptype:2/notation:true/shownames:true/mmsi:'+ vessel.mmsi + '/' %> or <%= link_to "general info", 'http://www.marinetraffic.com/en/ais/details/ships/'+ vessel.imo + '/' %> on the MarineTraffic website
-                          <% end %>
-                      </p>
-                      <p class="hidden-print">
-                        <% unless vessel.imo.nil? %>
-                            See the <%= link_to "position", 'http://www.vesselfinder.com/en-us/?mmsi='+ vessel.mmsi %> on the VesselFinder website
-                          <% end %>
-                      </p>
                     </div>
-                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
+            <% end %>
+        <% else %>
+            <h3>
+              There is currently no actively engaged vessels
+            </h3>
         <% end %>
-      <% end %>
     </div>
+<% end %>

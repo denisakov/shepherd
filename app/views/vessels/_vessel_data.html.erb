@@ -11,40 +11,34 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-6">
-            <p>
-              <strong>Type:</strong>
-              <samp><%= vessel.vsl_type%></samp>
-            </p>
-            <% unless vessel.blt_year.nil? %>
-              <p>
-                <strong>Year built:</strong>
-                <samp><%= vessel.blt_year.to_formatted_s(:just_year) %></samp>
-              </p>
-            <% end %>
+            <strong>Type:</strong>
+            <samp><%= vessel.vsl_type%></samp>
           </div>
+        <% unless vessel.blt_year.nil? %>
           <div class="col-xs-6">
-            <p>
-              <strong>Flag:</strong>
-              <samp><%= vessel.vsl_flag unless vessel.nil? %></samp>
-            </p>
+            <strong>Year built:</strong>
+            <samp><%= vessel.blt_year.to_formatted_s(:just_year) %></samp>
+          </div>
+        <% end %>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <strong>Flag:</strong>
+            <samp><%= vessel.vsl_flag unless vessel.nil? %></samp>
           </div>
         </div>
-
+        <br />
         <div class="row">
           <div class="col-xs-6">
-            <p>
-              <strong>IMO:</strong>
-              <samp><%= vessel.imo %></samp>
-            </p>
+            <strong>IMO:</strong>
+            <samp><%= vessel.imo %></samp>
           </div>
           <div class="col-xs-6">
-            <p>
-              <strong>MMSI:</strong>
-              <samp><%= vessel.mmsi unless vessel.mmsi.nil? %></samp>
-            </p>
+            <strong>MMSI:</strong>
+            <samp><%= vessel.mmsi unless vessel.mmsi.nil? %></samp>
           </div>
         </div>
-
+        <br />
         <div class="row">
           <div class="col-xs-12">
             <% unless vessel.owner.nil? %>

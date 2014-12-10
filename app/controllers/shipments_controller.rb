@@ -45,7 +45,7 @@ class ShipmentsController < ApplicationController
     if @shipment_status.save
       @shipment_status = ShipmentStatus.new
     end
-    render :action => :show
+    redirect_to :action => :show
   end
 
   # PATCH/PUT /shipments/1
