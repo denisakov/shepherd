@@ -1,66 +1,56 @@
 <% title "Shipment" %>
 
-<H1>
+<H2>
   <strong>M/V "<%= @shipment.vessel.vsl_name %>"</strong>
-</H1>
-<div class="12">
+</H2>
+<div>
 	<hr>
 </div>
 <% @shipment.shipment_statuses.order('created_at DESC').each_with_index do |s, index| %>
 	<div class="row">
-		<h4>
-			<div class="col-xs-4 col-sm-6">
+		<h5>
+			<div class="col-xs-6 col-sm-3 col-md-2 col-lg-2 pull-left">
 				<%= s.created_at.to_formatted_s(:d_m_y) %>&nbsp;&mdash;
 			</div>
-			<div class="col-xs-3 col-sm-5">
+			<div class="col-xs-4 col-sm-3 col-md-2 col-lg-2 pull-left">
 				<%= s.status %>
 			</div>
-			<div class="col-xs-5 col-sm-1 hidden-print">
+			<div class="col-xs-1 pull-left hidden-print">
 				<% if user_signed_in? %>
 					<%= link_to '<i class="glyphicon glyphicon-remove"></i>'.html_safe, s, :class => 'delete', method: :delete, :remote => true %>
 				<% end %>
 			</div>
-		</h4>
+		</h5>
 	</div>
 
 <% end %>
 <br />
 <br />
 <% if user_signed_in? %>
-	<div class="row hidden-print">
-		<div class="col-xs-3">
+	<div class="row hidden-print form-group col-xs-12">
+		<div class="col-sm-3 col-md-2 col-lg-2" style="padding-left:0px;">
 			<button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#add_new_status" aria-expanded="false" aria-controls="add_new_status">
 			  New status
 			</button>
 		</div>
-		<div>
-			<div id="add_new_status" class="collapse hidden-print">
-				<%= form_for(:shipment_status, :url => create_shipment_status_shipment_path()) do |f| %>
-					<!-- <div class="form-group row">
-						<div class="col-sm-3">
-					    	<label for="inputShipmentId" class="control-label vmiddle">Status for shipment No: <%= @shipment.id %></label>
-						</div>
-					</div> -->
-					<div class="form-group row hidden-print">
-						<div class="field col-xs-5 row">
-					    	<%= f.text_field :status, :class => "form-control", :id => "inputStatus", :placeholder => "Please indicate current status" %>
-						</div>
-						<div class="actions form-group row">
-						  <div class="field col-xs-3">
-						    <%= f.submit "Create", :class => "btn btn-primary" %>&nbsp;&nbsp;&nbsp;
-						    <a href="#" data-toggle="collapse" data-target="#add_new_status" aria-expanded="false" aria-controls="add_new_status">Cancel</a>
-						  </div>
-						</div>
+		<br / class="hidden-sm hidden-md hidden-lg">
+		<%= form_for(:shipment_status, :url => create_shipment_status_shipment_path()) do |f| %>
+			<div id="add_new_status" class="collapse hidden-print col-xs-12 col-sm-9 col-md-10 col-lg-10 hidden-print" style="padding-left:0px;">
+					<div class="field col-xs-12 col-sm-5 col-md-3 col-lg-3 hidden-print" style="padding-left:0px;">
+						<%= f.text_field :status, :class => "form-control", :id => "inputStatus", :placeholder => "Please indicate current status" %>
+						<br / class="hidden-sm hidden-md hidden-lg">
 					</div>
-				<% end %>
+					<div class="actions field col-xs-12 col-sm-4 col-md-3 col-lg-3 hidden-print" style="padding-left:0px;">
+						<%= f.submit "Create", :class => "btn btn-primary" %>&nbsp;&nbsp;&nbsp;
+						<a href="#" data-toggle="collapse" data-target="#add_new_status" aria-expanded="false" aria-controls="add_new_status">Cancel</a>
+					</div>
 			</div>
-		</div>
+		<% end %>
 	</div>
 <% end %>
-<br />
-<br />
-<br />
-<br />
+<br / class="hidden-xs">
+<br / class="hidden-xs">
+<br / class="hidden-xs">
 <br />
 <div class="row hidden-print">
 	<div class="col-xs-2">

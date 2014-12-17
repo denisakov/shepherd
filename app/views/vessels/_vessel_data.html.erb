@@ -10,32 +10,68 @@
     <div id="collapse<%= vessel.id %>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading<%= vessel.id %>">
       <div class="panel-body">
         <div class="row">
-          <div class="col-xs-6">
-            <strong>Type:</strong>
-            <samp><%= vessel.vsl_type%></samp>
+          <div class="col-xs-5">
+            <div class="row">
+              <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+                <strong>Type:</strong>
+              </div>
+              <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
+                <samp><%= vessel.vsl_type%></samp>
+              </div>
+            </div>
           </div>
         <% unless vessel.blt_year.nil? %>
-          <div class="col-xs-6">
-            <strong>Year built:</strong>
-            <samp><%= vessel.blt_year.to_formatted_s(:just_year) %></samp>
+          <div class="col-xs-7">
+            <div class="row">
+              <div class="col-xs-12 col-md-6 col-lg-6">
+                <strong>Year built:</strong>
+              </div>
+              <div class="col-xs-12 col-md-6 col-lg-6">
+                <samp><%= vessel.blt_year.to_formatted_s(:just_year) %></samp>
+              </div>
+            </div>
+            
           </div>
         <% end %>
         </div>
+        <br / class="hidden-md hidden-lg">
         <div class="row">
-          <div class="col-xs-12">
-            <strong>Flag:</strong>
-            <samp><%= vessel.vsl_flag unless vessel.nil? %></samp>
+          <div class="col-xs-5">
+            <div class="row">
+              <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+                <strong>Flag:</strong>
+              </div>
+              <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
+                <samp><%= vessel.vsl_flag unless vessel.nil? %></samp>
+              </div>
+            </div>
           </div>
         </div>
-        <br />
+        <br / class="hidden-md hidden-lg">
         <div class="row">
-          <div class="col-xs-6">
-            <strong>IMO:</strong>
-            <samp><%= vessel.imo %></samp>
+          <div class="col-xs-5">
+            <div class="row">
+              <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+                <strong>IMO:</strong>
+              </div>
+              <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
+                <samp><%= vessel.imo %></samp>
+              </div>
+            </div>
+            
+            
           </div>
-          <div class="col-xs-6">
-            <strong>MMSI:</strong>
-            <samp><%= vessel.mmsi unless vessel.mmsi.nil? %></samp>
+          <div class="col-xs-7">
+            <div class="row">
+              <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+                <strong>MMSI:</strong>
+              </div>
+              <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
+                <samp><%= vessel.mmsi unless vessel.mmsi.nil? %></samp>
+              </div>
+            </div>
+            
+            
           </div>
         </div>
         <br />
