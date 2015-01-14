@@ -1,23 +1,47 @@
+<% title "Shipment revision" %>
 <%= form_for(@shipment_status) do |f| %>
   <br />
   <br />
   <div class="form-group row">
-    <div class="col-sm-1">
-      <label for="inputShipmentId" class="control-label vmiddle">Shipment ID</label>
+    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-1 pull-left">
+      <label for="inputShipmentId" class="control-label vmiddle">Status</label>
     </div>
-    <div class="field col-sm-5 row">
-      <%= f.text_field :shipment_id, :class => "form-control", :id => "inputShipmentId", :placeholder => "Please the ID" %>
+    <div class="field col-xs-12 col-sm-5 col-md-4 col-lg-4 pull-left">
+      <%= f.text_field :status, :class => "form-control", :id => "inputStatus", :placeholder => "Short status" %>
     </div>
   </div>
 <div class="form-group row">
-  <div class="field col-sm-5 row">
-    <%= f.text_field :status, :class => "form-control", :id => "inputStatus", :placeholder => "Please indicate a current status" %>
+  <div class="col-xs-12 col-sm-2 col-md-2 col-lg-1 pull-left">
+      <label for="inputDescription" class="control-label vmiddle">Description</label>
+  </div>
+  <div class="field col-xs-12 col-sm-5 col-md-4 col-lg-4 pull-left">
+    <%= f.text_area :description, :class => "form-control", :id => "inputDescription", :placeholder => "Please describe a current status" %>
+  </div>
+</div>
+<div class="form-group row">
+  <div class="col-xs-12 col-sm-2 col-md-2 col-lg-1 hidden-print">
+    <label for="inputStartDate" class="control-label vmiddle">Start <br / class="hidden-xs">(date - time)</label>
+  </div>
+  <div class="field col-xs-12 col-sm-6 col-md-6 col-lg-6 hidden-print">
+    <small>
+      <%= f.datetime_select :start_time, :order => [:day, :month, :year, :hour, :minute, :second], :use_two_digit_numbers => true, :use_month_numbers => true, :date_separator => " / ", :discard_second => true, :include_blank => true, :default => Date.today, :start_year => 2011, :end_year => Date.today.year + 1, :minute_step => 15, :class => "form-control", :id => "inputStartTime" %>
+    </small>
+  </div>
+</div>
+<div class="form-group row">
+  <div class="col-xs-12 col-sm-2 col-md-2 col-lg-1 hidden-print">
+    <label for="inputCompDate" class="control-label vmiddle">Expected completion <br / class="hidden-xs">(date - time)</label>
+  </div>
+  <div class="field col-xs-12 col-sm-6 col-md-6 col-lg-6 hidden-print">
+    <small>
+      <%= f.datetime_select :comp_time, :order => [:day, :month, :year, :hour, :minute, :second], :use_two_digit_numbers => true, :use_month_numbers => true, :date_separator => " / ", :discard_second => true, :include_blank => true, :default => Date.today, :start_year => 2011, :end_year => Date.today.year + 1, :minute_step => 15, :class => "form-control", :id => "inputCompTime" %>
+    </small>
   </div>
 </div>
 <div class="actions form-group row">
   <div class="field col-sm-6">
-    <%= f.submit "Create", :class => "btn btn-primary" %>&nbsp;&nbsp;&nbsp;
-    <%= link_to 'Back', shipments_path, :class => "vbottom" %>
+    <%= f.submit "Update", :class => "btn btn-primary" %>&nbsp;&nbsp;&nbsp;
+    <%= link_to 'Back', shipment_path(@shipment_status.shipment_id), :class => "vbottom" %>
   </div>
 </div>
 <% end %>

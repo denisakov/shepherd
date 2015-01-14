@@ -54,7 +54,7 @@ namespace :crawl do
 				puts "Loaded page for vessel #{mmsi}"
 
 				# last_upt = agent.page.search("/html/body/div/div[3]/div[1]/div[2]/div[2]/div[1]/div[1]/span[2]/strong/span").children[0].text
-				if !agent.page.search('span:contains("Info Received:")').empty? then
+				if !agent.page.search('span:contains("Info Received:")').empty? and agent.page.search('span:contains("Info Received:")')[0].parent.children[3].text != "-" then
 					last_upt = Date.parse(agent.page.search('span:contains("Info Received:")')[0].parent.children[3].text)
 				else
 					v = Vessel.find_by_mmsi(mmsi)

@@ -67,7 +67,7 @@
 		                </div>
 		                <div class="col-xs-6">
 		                	<%= submit_tag 'Update GPS', :class => "btn btn-default btn-xs vbottom" %><br />
-		                	<small>last checked <strong><%= @vessel.positions.last.updated_at.strftime("%d-%b %H:%M") %></strong></small>
+		                	<small>last checked <strong><%= @vessel.positions.last.updated_at.strftime("%d-%b %H:%M") unless @vessel.positions.last.nil? %></strong></small>
 		                </div>
 			            <% end %>  
 		            </div>
@@ -75,7 +75,7 @@
 					<br />
 		            <div class="row">
 		                <div class="col-xs-9">
-		                	<strong>Status: </strong><%= @vessel.positions.last.nav_status %>
+		                	<strong>Status: </strong><%= @vessel.positions.last.nav_status unless @vessel.positions.last.nil?%>
 		                </div>
 		            </div>
 		            <div class="row">

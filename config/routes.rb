@@ -4,6 +4,8 @@ Rails.application.routes.draw do
 
   resources :shipment_statuses
 
+  get "shipments/message" => 'shipments#message', :as => :message
+  
   resources :shipments do
     member do
       post 'create_shipment_status'

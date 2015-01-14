@@ -2,3 +2,10 @@
   height: 297mm - 23mm;
   width: 210mm - 21mm;
 }
+h1, li{
+  font-family: 'Times';
+}
+
+p{
+  font-family: 'Open Sans';
+}

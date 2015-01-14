@@ -99,31 +99,45 @@ namespace :crawl do
 						ref_long = line.split(/\t/)[2].to_f
 						puts "#{ref_long}"
 						ref_d = line.split(/\t/)[3].to_i
-						puts "#{ref_d}"
+						puts "ref_d = #{ref_d}"
 						
 						latrad = lat.to_f*Math::PI/180
+						puts "latrad = #{latrad}"
 						reflatrad = ref_lat*Math::PI/180
+						puts "reflatrad = #{reflatrad}"
 						sinlatsq = Math.sin(latrad-reflatrad)**2
+						puts "sinlatsq = #{sinlatsq}"
 						longrad = long.to_f*Math::PI/180
+						puts "longrad = #{longrad}"
 						reflongrad = ref_long*Math::PI/180
+						puts "reflongrad = #{reflongrad}"
 						sinlongsq = Math.sin(longrad-reflongrad)**2
+						puts "sinlongsq = #{sinlongsq}"
 						coslat = Math.cos(latrad)
+						puts "coslat = #{coslat}"
 						cosreflat = Math.cos(reflatrad)
+						puts "cosreflat = #{cosreflat}"
 						sq = sinlatsq+sinlongsq*coslat*cosreflat
-						d = 2*6371*Math.asin(Math.sqrt(sq))
-						puts "#{d}"
+						puts "sq = #{sq}"
+						d = 2*6371*Math.asin(Math.sqrt(sq)).abs
+						puts "d = #{d}"
 						if d < ref_d then
 							@now_near = ref_now_near
 							puts "The vessel is currently near #{@now_near}"
 							break
 						else
 							@now_near = ""
+							puts "The vessel is at sea"
 							next
 						end
 					end
 
 					if !agent.page.search('span:contains("Info Received:")').empty? then
-						last_upt = Date.parse(agent.page.search('span:contains("Info Received:")')[0].parent.children[3].text)
+						if !agent.page.search('span:contains("Info Received:")')[0].parent.children[3].text == "-"
+							last_upt = Date.parse(agent.page.search('span:contains("Info Received:")')[0].parent.children[3].text)
+						else
+							last_upt = ""
+						end
 					elsif agent.page.search('span:contains("Last report:")')[0].parent.children[5].text =~ /\d/
 						last_upt = Date.parse(agent.page.search('span:contains("Last report:")')[0].parent.children[5].text)
 					else
@@ -254,7 +268,11 @@ namespace :crawl do
 				end
 
 				if !agent.page.search('span:contains("Info Received:")').empty? then
-					last_upt = Date.parse(agent.page.search('span:contains("Info Received:")')[0].parent.children[3].text)
+					if !agent.page.search('span:contains("Info Received:")')[0].parent.children[3].text == "-"
+						last_upt = Date.parse(agent.page.search('span:contains("Info Received:")')[0].parent.children[3].text)
+					else
+						last_upt = ""
+					end
 				elsif agent.page.search('span:contains("Last report:")')[0].parent.children[5].text =~ /\d/
 					last_upt = Date.parse(agent.page.search('span:contains("Last report:")')[0].parent.children[5].text)
 				else

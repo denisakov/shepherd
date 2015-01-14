@@ -12,6 +12,10 @@ class ShipmentsController < ApplicationController
   # GET /shipments/1
   # GET /shipments/1.json
   def show
+    respond_to do |format|
+      format.html
+      format.js {}
+    end
   end
 
   def new
@@ -19,6 +23,14 @@ class ShipmentsController < ApplicationController
   end
 
   def edit
+  end
+
+  def message
+    #@selected = Shipment.find(params[:shipment])
+    respond_to do |format|
+      format.html
+      format.js {}
+    end
   end
 
  
@@ -40,10 +52,12 @@ class ShipmentsController < ApplicationController
 
   def create_shipment_status
     @shipment = Shipment.find(params[:id]) 
-    @shipment_status = @shipment.shipment_statuses.build(:shipment_id => params[:id], :status => params[:shipment_status][:status])
+    @shipment_status = @shipment.shipment_statuses.build(:shipment_id => params[:id], :status => params[:shipment_status][:status], :description => params[:shipment_status][:description], :start_time => params[:shipment_status][:start_time], :comp_time => params[:shipment_status][:comp_time])
     @shipment_status.save!
     if @shipment_status.save
       @shipment_status = ShipmentStatus.new
+    else
+      render html: @shipment.errors, status: :unprocessable_entity
     end
     redirect_to :action => :show
   end
@@ -81,6 +95,6 @@ class ShipmentsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def shipment_params
-      params.require(:shipment).permit(:title, :vessel_id)
+      params.require(:shipment).permit(:status, :vessel_id)
     end
 end

@@ -20,5 +20,12 @@
   <%= @owner.notes %>
 </p>
 
+<p>
+  <strong>Vessels:</strong><br />
+  <% @owner.vessels.each do |v| %>
+  - <%= link_to v.vsl_name, vessel_path(v) %> (<%= v.vsl_type%>)<br />
+  <% end %>
+</p>
+
 <%= link_to 'Edit', edit_owner_path(@owner) %> |
 <%= link_to 'Back', owners_path %>

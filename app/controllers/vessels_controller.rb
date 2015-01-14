@@ -86,7 +86,13 @@ class VesselsController < ApplicationController
             render :pdf => "Example PDF file",
                    :template => 'vessels/single.pdf.erb',
                    :print_media_type => true,
-                   :page_size => "A4"
+                   :page_size => "A4",
+                   :orientation => 'Portrait',
+                   :margin => {:top => 5,
+                           :bottom  => 5,
+                           :left  => 5,
+                           :right => 5},
+                   :show_as_html => params[:debug].present?
       end
       format.html { render :show }
     end

@@ -13,11 +13,11 @@
         </div>
         <div class="collapse navbar-collapse hidden-print" id="navbar-collapse">
           <ul class="nav navbar-nav navbar-right hidden-print">
-            <li class="<%= "active" if current_page?(non_russian_path) %> hidden-print"><%= link_to "Research", non_russian_path %></li>
             <li class="<%= "active" if current_page?(dash_path) %> hidden-print"><%= link_to "Dashboard", dash_path %></li>
             <li class="<%= "active" if current_page?(owners_path) %> hidden-print"><%= link_to "Owners", owners_path %></li>
             <li class="<%= "active" if current_page?(shipments_path) %> hidden-print"><%= link_to "Shipments", shipments_path %></li>
-            <li class="<%= "active" if current_page?(vessels_path) %> hidden-print"><%= link_to "All vessels", vessels_path %></li>
+            <li class="<%= "active" if current_page?(vessels_path) %>"><%= link_to "Russian", vessels_path %></li>
+            <li class="<%= "active" if current_page?(non_russian_path) %>"><%= link_to "Non-russian", non_russian_path %></li>
             
             <% if user_signed_in? %>
               <li class="<%= "active" if current_page?('login_path') %> hidden-print"><%= link_to (current_user.email), edit_user_registration_path %></li>

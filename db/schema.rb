@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141203160009) do
+ActiveRecord::Schema.define(version: 20141217162410) do
 
   create_table "owners", force: true do |t|
     t.string   "name"
@@ -53,6 +53,7 @@ ActiveRecord::Schema.define(version: 20141203160009) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "description"
+    t.datetime "start_time"
   end
 
   add_index "shipment_statuses", ["shipment_id"], name: "index_shipment_statuses_on_shipment_id", using: :btree

@@ -22,17 +22,20 @@
                                         <%= link_to vessel.vsl_name, vessel_path(vessel) %>
                                     </div>
                                     <div class="col-xs-6 col-sm-5 col-md-4 col-lg-4">
-                                        <% if vessel.positions.last.nav_status =~ /Way|Underway/ %>
-                                            <span class="label label-success"><%= vessel.positions.last.nav_status %></span>
-                                        <% elsif vessel.positions.last.nav_status =~ /Unknown/%>
-                                            <span class="label label-default"><%= vessel.positions.last.nav_status %></span>
-                                        <% else %>
-                                            <span class="label label-warning"><%= vessel.positions.last.nav_status %></span>
+                                        <% if !vessel.positions.last.nil? %>
+                                            <% if vessel.positions.last.nav_status =~ /Way|Underway/ %>
+                                                <span class="label label-success"><%= vessel.positions.last.nav_status %></span>
+                                            <% elsif vessel.positions.last.nav_status =~ /Unknown/%>
+                                                <span class="label label-default"><%= vessel.positions.last.nav_status %></span>
+                                            <% else %>
+                                                <span class="label label-warning"><%= vessel.positions.last.nav_status %></span>
+                                            <% end %>
+
+                                            <span class="hidden-xs">
+                                                <small>(LAST UPDATE: <strong><%= vessel.positions.last.updated_at.strftime("%d-%b %H:%M") %>)</strong>
+                                                </small>
+                                            </span>
                                         <% end %>
-                                        <span class="hidden-xs">
-                                            <small>(LAST UPDATE: <strong><%= vessel.positions.last.updated_at.strftime("%d-%b %H:%M") %>)</strong>
-                                            </small>
-                                        </span>
                                     </div>
                                     <% if user_signed_in? %>
                                         <div class="col-xs-6 col-sm-2 col-md-2 col-lg-2 pull-right hidden-print">

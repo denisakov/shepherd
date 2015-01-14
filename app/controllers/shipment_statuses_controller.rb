@@ -72,6 +72,6 @@ class ShipmentStatusesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def shipment_status_params
-      params.require(:shipment_status).permit(:title, :shipment_id, :status)
+      params.require(:shipment_status).permit(:title, :shipment_id, :status, :description, :start_time, :comp_time)
     end
 end

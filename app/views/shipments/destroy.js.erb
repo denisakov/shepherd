@@ -1,7 +1,7 @@
-$('#shipment_<%= @shipment.id %>').remove();
 $('a.delete').on('click', function() {
 	if(confirm("Are you sure?")){
-	$(this).closest('tr').delay().fadeOut();
+		$('#shipment_<%= @shipment.id %>').remove();
+		$(this).closest('tr').delay().fadeOut();
 	}else{
 		return false;
 	}

@@ -103,7 +103,7 @@
                 <% end %>
               </td>
               <% if user_signed_in? %>
-                <td class="rowlink-skip hidden-print"><%= link_to '<i class="glyphicon glyphicon-remove"></i>'.html_safe, vessel, :class => 'delete', method: :delete, :remote => true %>
+                <td class="rowlink-skip hidden-print"><%= link_to '<i class="glyphicon glyphicon-remove"></i>'.html_safe, vessel, :class => 'delete', method: :delete, remote: true %>
                 </td>
               <% end %>
             </tr>
