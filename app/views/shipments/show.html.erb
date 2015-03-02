@@ -25,13 +25,13 @@
 			</div><!-- modal-body -->
 			<div class="modal-footer">
 			  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			  <button type="button" class="btn btn-primary">Send message</button>
+			  <button type="button" class="btn btn-primary send">Send message</button>
 			</div>
 		</div><!-- modal-content -->
 	</div><!-- modal-dialog -->
 </div><!-- modal -->
 <H2>
-  <strong>M/V "<%= @shipment.vessel.vsl_name %>"</strong>
+  <strong>M/V &ldquo;<%= @shipment.vessel.vsl_name %>&rdquo;</strong>
 </H2>
 <div>
 	<hr class="hidden-xs">
@@ -48,7 +48,7 @@
 				<% if !s.start_time.nil? %>
 					(<%= s.start_time.to_formatted_s(:h_m)%>)<br />
 				<% else %>
-					(&mdash;)
+					( &#63; )
 				<% end %>
 				<strong>
 					<% if !s.comp_time.nil?%>
@@ -58,29 +58,39 @@
 				<% if !s.comp_time.nil? %>
 					(<%= s.comp_time.to_formatted_s(:h_m)%>)<br />
 				<% else %>
-					(&mdash;)
+					( &#63; )
 				<% end %>
 			</div>
-					<div class="col-xs-8 hidden-sm hidden-md hidden-lg pull-left hidden-print">
-						<strong><hr></hr><%= s.start_time.to_formatted_s(:d_m_y_h_m) unless s.start_time.nil?%>
-						 &mdash; <%= s.comp_time.to_formatted_s(:d_m_y_h_m) unless s.comp_time.nil?%></strong>
-					</div>
-					<div class="col-xs-1 hidden-sm hidden-md hidden-lg pull-left hidden-print">
-						<% if user_signed_in? %>
-						<!-- Button trigger modal -->
-							<%= link_to 'send', message_path(:shipment => @shipment.id), {'class' => "btn btn-primary btn-sm",'type' => "button", 'data-toggle' => "modal", 'data-target' => "#messageModal", 'data-recipient' => "@mdo", 'data-subject' => @shipment.vessel.vsl_name} %>
-						<% end %>
-					</div>
-					<div class="col-xs-1 hidden-sm hidden-md hidden-lg pull-right hidden-print">
-						<% if user_signed_in? %>
-							<%= link_to '<i class="glyphicon glyphicon-remove"></i>'.html_safe, s, :class => 'delete', method: :delete, :remote => true %>
-						<% end %>
-					</div>
+			<div class="col-xs-8 hidden-sm hidden-md hidden-lg pull-left hidden-print">
+				<strong>
+					<% if !s.start_time.nil?%>
+						<%= s.start_time.to_formatted_s(:d_m_y_h_m)%>
+					<% else %>
+						( &#63; )
+					<% end %>
+					&mdash;
+					<% if !s.comp_time.nil?%>
+						<%= s.comp_time.to_formatted_s(:d_m_y_h_m)%>
+					<% else %>
+						( &#63; )
+					<% end %>
+				</strong>
+			</div>
+			<div class="col-xs-1 hidden-sm hidden-md hidden-lg pull-left hidden-print">
+				<% if user_signed_in? %>
+				<!-- Button trigger modal -->
+					<%= link_to 'send', message_path(:shipment => @shipment.id), {:remote => true,'class' => "btn btn-primary btn-sm",'type' => "button", 'data-toggle' => "modal", 'data-target' => "#messageModal", 'data-recipient' => "@mdo", 'data-subject' => @shipment.vessel.vsl_name} %>
+				<% end %>
+			</div>
+			<div class="col-xs-1 hidden-sm hidden-md hidden-lg pull-right hidden-print">
+				<% if user_signed_in? %>
+					<%= link_to '<i class="glyphicon glyphicon-remove"></i>'.html_safe, s, :class => 'delete', method: :delete, :remote => true %>
+				<% end %>
+			</div>
 			<div class="col-xs-10 col-sm-7 col-md-8 col-lg-7 pull-left">
 				<%= link_to s.status, edit_shipment_status_path(s) %><br />
-				<%= s.description %> 
+				<%= s.description %>
 			</div>
-
 			<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 pull-left hidden-xs">
 				<% if user_signed_in? %>
 					<%= link_to 'send', message_path(:shipment => @shipment.id), {:remote => true, 'class' => "btn btn-primary btn-xs",'type' => "button", 'data-toggle' => "modal", 'data-target' => "#messageModal", 'data-recipient' => "@mdo", 'data-subject' => @shipment.vessel.vsl_name} %>

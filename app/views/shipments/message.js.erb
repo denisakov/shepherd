@@ -1,6 +1,6 @@
 $(document).ready(function () {
-  $("#messageModal").on('show.bs.modal', function (event) {
-  var button = $(event.relatedTarget) // Button that triggered the modal
+  $("#messageModal").on('shown.bs.modal', function(e) {
+  var button = $(e.relatedTarget) // Button that triggered the modal
   var recipient = button.data('recipient') // Extract info from data-* attributes
   var subject = button.data('subject')
   // var message = button.data('message')
@@ -12,4 +12,16 @@ $(document).ready(function () {
   modal.find('#subject-text').val('MV "' + subject +'"')
   // modal.find('#message-text').val(message)
   });
+  $("#messageModal").on("click", ".send", function(e) {
+      bootbox.alert("Message sent!", function() {
+      console.log("Alert Callback");
+    });
+  });
 });
+// $(document).ready(function () {
+//   $("#messageModal").on("click", ".send", function(e) {
+//       bootbox.alert("Message sent!", function() {
+//       console.log("Alert Callback");
+//     });
+//   });
+// });
